@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from cs241.cs.illinois.edu/coursebook/Threads by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:37:32 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="utf-8">
+
+  <!-- If for some reason you are using IE, use edge -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- So bootstrap isn't horrible, set the width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="../images/favicons/manifest.json">
+  <link rel="mask-icon" href="../images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>CS 241 · Threads</title>
+
+  <!-- Reference a CDN so this is properly cached in the browser forever. Unless they clean out the
+       Cache this will incur no load time. Ideally we should put a security checksum but that breaks
+       Firefox development sometimes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <!-- Asynchronously load the code style sheet because we want everything loaded as fast as possible
+       Also tag with ?v=time to bust the cache of any browser so updates appear -->
+  <style rel="stylesheet" type="text/css">.highlight table td{padding:5px}.highlight table pre{margin:0}.highlight,.highlight .w{color:#93a1a1;background-color:#002b36}.highlight .err{color:#002b36;background-color:#dc322f}.highlight .c,.highlight .cd,.highlight .cm,.highlight .c1,.highlight .cs{color:#657b83}.highlight .cp{color:#b58900}.highlight .nt{color:#b58900}.highlight .o,.highlight .ow{color:#93a1a1}.highlight .p,.highlight .pi{color:#93a1a1}.highlight .gi{color:#859900}.highlight .gd{color:#dc322f}.highlight .gh{color:#268bd2;background-color:#002b36;font-weight:bold}.highlight .k,.highlight .kn,.highlight .kp,.highlight .kr,.highlight .kv{color:#6c71c4}.highlight .kc{color:#cb4b16}.highlight .kt{color:#cb4b16}.highlight .kd{color:#cb4b16}.highlight .s,.highlight .sb,.highlight .sc,.highlight .sd,.highlight .s2,.highlight .sh,.highlight .sx,.highlight .s1{color:#859900}.highlight .sr{color:#2aa198}.highlight .si{color:#d33682}.highlight .se{color:#d33682}.highlight .nn{color:#b58900}.highlight .nc{color:#b58900}.highlight .no{color:#b58900}.highlight .na{color:#268bd2}.highlight .m,.highlight .mf,.highlight .mh,.highlight .mi,.highlight .il,.highlight .mo,.highlight .mb,.highlight .mx{color:#859900}.highlight .ss{color:#859900}
+/*# sourceMappingURL=/assets/source-maps/code-style.css.map */
+/*# sourceURL=css/code-style.css */
+</style>
+  <style rel="stylesheet" type="text/css">:root{--color-primary: hsl(207, 59%, 43%);--color-secondary: hsl(207, 70%, 53%);--color-emphasis: hsl(204, 100%, 42%);--color-text: hsl(0, 0%, 0%);--color-translucent: hsla(0, 0%, 0%, 0.3);--color-pale-white: hsla(240, 8%, 95%)}body{padding-top:50px;font-family:Roboto, Helvetica, Arial, sans-serif;background-color:var(--color-pale-white);color:var(--color-text);padding-bottom:50px}@media (min-width: 768px) and (max-width: 991px){body{padding-top:100px}}.navbar{background-color:var(--color-primary);border-color:var(--color-secondary);border:0px;border-top:none;box-shadow:none;margin-bottom:0}.navbar-default .navbar-brand{color:var(--color-pale-white) !important;font-weight:bold}.navbar-default .navbar-nav>li>a{color:var(--color-pale-white) !important}.navbar-collapse{border-top:0px !important;box-shadow:none}.navbar-brand:hover{color:var(--color-navbar-text) !important}.github-link{display:inline-block;vertical-align:middle;margin-left:0.5em;text-indent:-9999px;width:32px;height:32px;background-image:url(NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjMTgxNjE2IiBkPSJNMzIuNiwzLjRDMTYuMywzLjQsMywxNi43LDMsMzMuMWMwLDEzLjEsOC41LDI0LjIsMjAuMywyOC4xDQoJYzEuNSwwLjMsMi0wLjYsMi0xLjRjMC0wLjcsMC0yLjYsMC01Yy04LjIsMS44LTEwLTQtMTAtNGMtMS4zLTMuNC0zLjMtNC4zLTMuMy00LjNjLTIuNy0xLjgsMC4yLTEuOCwwLjItMS44YzMsMC4yLDQuNSwzLjEsNC41LDMuMQ0KCWMyLjYsNC41LDYuOSwzLjIsOC42LDIuNWMwLjMtMS45LDEtMy4yLDEuOS00Yy02LjYtMC43LTEzLjUtMy4zLTEzLjUtMTQuNmMwLTMuMiwxLjItNS45LDMtNy45Yy0wLjMtMC43LTEuMy0zLjgsMC4zLTcuOA0KCWMwLDAsMi41LTAuOCw4LjEsM2MyLjQtMC43LDQuOS0xLDcuNC0xYzIuNSwwLDUsMC4zLDcuNCwxYzUuNy0zLjgsOC4xLTMsOC4xLTNjMS42LDQuMSwwLjYsNy4xLDAuMyw3LjhjMS45LDIuMSwzLDQuNywzLDcuOQ0KCWMwLDExLjQtNi45LDEzLjktMTMuNSwxNC42YzEuMSwwLjksMiwyLjcsMiw1LjVjMCw0LDAsNy4yLDAsOC4xYzAsMC44LDAuNSwxLjcsMiwxLjRjMTEuOC0zLjksMjAuMi0xNSwyMC4yLTI4LjENCglDNjIuMiwxNi43LDQ5LDMuNCwzMi42LDMuNHoiLz4NCjwvc3ZnPg0K)}h1{padding-bottom:20px;font-size:48px}h2{padding-top:50px;margin-top:-20px}.navbar-nav,.navbar-nav>ul{margin:0}@media (max-width: 767px){h1{font-size:36px}h2{font-size:22px}p,li{font-size:12px}}.popover{background-color:black;color:black;display:block}.popover-title{background-color:black;color:black;font-size:12px;text-align:center;border-bottom:0px}.popover-title a{color:white;cursor:pointer}.popover-content{background-color:black;padding:0px}.popover.top>.arrow:after{border-top-color:black}table{width:100%}.anchor{display:none;padding-left:5px}.title-text:hover>.anchor{display:inline}.day{height:300px;margin-bottom:20px;width:100%;background-color:#fff;border-radius:3px}.day h1{color:#f1f1f3}.day-summary,.day-resources{color:#000}.day-resources{position:absolute;bottom:20px}.day-summary{position:absolute;top:75px}.day-title-text h3{margin:0px}.day-title{padding-top:5px;padding-bottom:5px;border-radius:3px;height:70px}.schedule-container{margin-left:20px;margin-right:20px}ul.toc{list-style:none;padding-left:1em}h1,h2,h3{color:var(--color-secondary)}.announcement-card{background-color:var(--color-pale-white);border-radius:5px}.annoucement-title{margin-top:5px}.day-title-h3{color:var(--color-pale-white)}img:not(.emoji){max-height:80vh;display:inline-block;margin:auto;max-width:100%}.img-paragraph{display:grid}.hidden{display:none !important}.loader,.loader:before,.loader:after{border-radius:50%}.loader{color:var(--color-pale-white);font-size:11px;text-indent:-99999em;margin:55px auto;position:relative;width:10em;height:10em;box-shadow:inset 0 0 0 1em;-webkit-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0)}.loader:before,.loader:after{position:absolute;content:''}.loader:before{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:10.2em 0 0 10.2em;top:-0.1em;left:-0.1em;-webkit-transform-origin:5.2em 5.1em;transform-origin:5.2em 5.1em;-webkit-animation:load2 2s infinite ease 1.5s;animation:load2 2s infinite ease 1.5s}.loader:after{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:0 10.2em 10.2em 0;top:-0.1em;left:5.1em;-webkit-transform-origin:0px 5.1em;transform-origin:0px 5.1em;-webkit-animation:load2 2s infinite ease;animation:load2 2s infinite ease}@-webkit-keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.anchor{text-decoration:none}.anchor:hover{text-decoration:none}.fancy-link{text-decoration:none !important;color:var(--color-emphasis);display:inline-block;position:relative;padding-bottom:0px}.fancy-link:after{content:'';display:block;margin:auto;height:1px;width:0px;background:transparent;transition:width .3s ease, background-color .3s ease}.fancy-link:hover:after{width:100%;background:var(--color-emphasis)}.container-fluid{padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}.navbar-toggle{border-width:0px}.navbar-default .navbar-toggle .icon-bar{background-color:var(--color-pale-white)}.navbar-brand.small{display:none}@media (max-width: 767px){.navbar-brand.normal{display:none}.navbar-brand.small{display:inline-block}}.speaker-wrapper{float:right}.speaker{background-image:url("data:image/png;base64,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");background-size:cover;height:40px;width:40px;margin-top:5px}pre{color:var(--color-pale-white);background-color:var(--color-text);border:inherit}code{color:var(--color-pale-white)}.code-copy{float:right;right:0px;display:none;background-color:var(--color-text);padding:5px 5px 5px 5px;border-radius:3px;cursor:pointer}pre code{display:block}pre:hover>*>.code-copy{display:inline}.code-copy-textarea{position:absolute;left:-9999px;top:-9999px}pre.highlight{margin-bottom:-10px;padding-bottom:0px}.highlighter-rouge{background-color:#DFDFDF;color:#151515;border-radius:5px;padding-top:4px}.highlight{background-color:#151515;border:0px;color:#F2F2F4}div.highlighter-rouge,figure.highlighter-rouge{background-color:#151515;color:#D7D7D7;padding-bottom:1.5em;margin-bottom:0.65em}.fancy-link code{color:#337ab7}.fancy-link:hover code{color:#23527c}.fancy-link:hover:after code{background-color:#337ab7}.table>tbody>tr>td,table>tbody>tr>td,.table>tbody>tr>th,table>tbody>tr>th,.table>tfoot>tr>td,table>tfoot>tr>td,.table>tfoot>tr>th,table>tfoot>tr>th,.table>thead>tr>td,table>thead>tr>td,.table>thead>tr>th,table>thead>tr>th{border-top:0px}.table,table{margin-left:40px;width:75%}.search-icon-div{width:initial;padding-left:10px;background-color:white;height:34px;border-radius:3px 0px 0px 3px}.glyphicon-search{font-size:32px;top:0px;color:#2C72AD}.search{border-radius:0px 3px 3px 0px;border:0px;outline:none;box-shadow:none}.no-gutter>[class*='col-']{padding-right:0;padding-left:0}.result-link{font-size:24px;text-decoration:underline}.result-div{padding-bottom:12px}.highlight-result{background-color:yellow;border-radius:3px;color:black;padding-left:2px;padding-right:2px}tbody tr:nth-child(odd){background-color:#DDD;border-radius:20px}html.hacker,body.hacker,header.hacker,nav.hacker,:not(.card-staff)>*>div:not(.card-staff).hacker,table.hacker,pre.hacker,span.hacker,:not(.card-staff)>a.hacker,p.hacker,h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:white !important;font-family:monospace !important;background-color:black !important}h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:#20C20E !important}ul.hacker{list-style-type:square}pre.hacker{border-color:white;border-radius:0}.toc.hacker{border-left-width:0}.content .highlighter-rouge.hacker{font-weight:bold;background-color:black}.pad.hacker{padding:0}a.hacker{color:#20C20E}tbody tr:nth-child(odd).hacker{background-color:inherit}body.hacker .day,body.hacker .announcement-card{background-color:#151515}body.hacker .announcement{color:white !important}#tuxlink img.hacker{-ms-interpolation-mode:nearest-neighbor;image-rendering:pixelated}.apply-button{border:none;background-color:white;padding:10px 20px 10px 20px;font-size:36px;border-radius:5px;box-shadow:5px 5px gray;margin:10px auto 10px auto;display:block;transition:background-color 0.5s ease}.apply-button:hover{background-color:var(--color-primary)}li.navbar-subitem{float:left;overflow:hidden;width:100%}.navbar-item,.navbar-subitem{color:var(--color-navbar-text);text-align:center;font-family:'Roboto', sans-serif}li.navbar-item:hover,li.navbar-subitem:hover{background-color:white}li.navbar-item:hover>a,li.navbar-subitem:hover>a{color:var(--color-primary) !important}.subitem-container{display:none;position:absolute;min-width:8vw;background-color:var(--color-primary);box-shadow:0px 8px 16px 0px var(--color-translucent);z-index:1;width:100%}.navbar-item:hover .subitem-container{display:block}.staff{width:100%}.flexbox-item div.staff-image{width:18vh;height:18vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.flexbox-item:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-weight:100;padding-top:2vh;color:var(--color-secondary-emphasis)}.heading{text-align:center;font-family:Roboto, Helvetica, sans-serif;font-size:3em;padding:1em;padding:0}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}main{text-align:center;margin:0;padding:0;background-color:white}.card-body{background-color:var(--color-pale-white);padding:2vh;display:block}.card-body.course-heading{background-color:rgba(72,105,255,0.945)}.card-body.card-body.course-heading h1{color:white}.card-body.course-information{background-color:white}h2{font-weight:200}section.flexbox{display:flex;justify-content:center;margin:auto;flex-wrap:wrap;width:90vw}.flexbox-item{display:inline-block;padding:2vh;margin:2vh}img.logo{width:2vw;height:3vw;margin:2vh}@media (max-width: 480px){.flexbox-item div.staff-image{width:18vh;height:18vh}img.logo{width:10vw;height:8vh}.staff-name{font-size:0.75em}}.infrastructure-links{margin:auto;text-align:center;display:block}.gallery{display:flex;justify-content:center;margin:auto;padding:5vw;flex-wrap:wrap;width:100vw}.staff{width:100%}.staff-container{margin:2vh}.staff-container div.staff-image{width:24vh;height:24vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.staff-container:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-size:1.5em;padding-top:1vh;color:var(--color-emphasis)}.heading{text-align:center}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}@media only screen and (max-width: 480px){.staff-container div.staff-image{width:20vh;height:20vh}.staff-name{font-size:1.25em}}.latest-mp{background-color:rgba(16,213,147,0.85)}.latest-lab{background-color:rgba(255,102,42,0.85)}.latest-assignments section.flexbox-item{border-radius:4%}
+/*# sourceMappingURL=/assets/source-maps/main.css.map */
+/*# sourceURL=css/main.css */
+</style>
+
+  <meta property="og:locale" content="en_US">
+  
+  
+  <meta property="og:title" content="Threads" />
+  
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="http://cs241.cs.illinois.edu" />
+  
+  
+  <meta property="og:description" content=""Webpage for CS 241: System Programming at the University of Illinois at Urbana-Champaign. All documentation and information about the course can be found here."
+" />
+  
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- Navigation button as html so we don't have to resize images -->
+      <button
+        type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-expanded="false"
+        aria-controls="navbar"
+      >
+        <!-- Hamburger Navigation bar on small -->
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Full title on laptop -->
+      <a class="navbar-brand navbar-item normal" href="../index.html">
+             <span>CS 241: System Programming</span> 
+      </a>
+
+      <!-- Smaller on mobile-->
+      <a class="navbar-brand navbar-item small" href="../index.html">
+          <span>CS 241</span>
+      </a>
+    </div>
+
+    <!-- Finally generate what is in the navbar -->
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        <li class="navbar-item">
+          <a href="../assignments.html">Assignments</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../quiz_topics.html">Quizzes</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../grades.html">Grades</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../schedule.html">Schedule</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../lectures.html">Lectures</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../syllabus.html">Syllabus</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../staff.html">Staff</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../staff_hall_of_fame.html">Staff Hall of Fame</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../resources.html">Resources</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../peer_tutoring.html">Peer Tutoring</a>
+            </li>
+            
+            <li class="navbar-subitem">
+              <a href="index.html">Coursebook</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../honors.html">Honors</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto"
+    rel="stylesheet"
+  />
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            
+            
+            
+            <h1>
+              Threads
+
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      
+      <div id="content">
+          <div class="wrapper">
+
+</div>
+          <div class="wrapper">
+<ul>
+  <li>
+<a href="#threads" class="fancy-link wiki-link">Threads</a>
+    <ul>
+      <li><a href="#processes-vs-threads" class="fancy-link wiki-link">Processes vs threads</a></li>
+      <li><a href="#thread-internals" class="fancy-link wiki-link">Thread Internals</a></li>
+      <li><a href="#simple-usage" class="fancy-link wiki-link">Simple Usage</a></li>
+      <li><a href="#pthread-functions" class="fancy-link wiki-link">Pthread Functions</a></li>
+      <li>
+<a href="#race-conditions" class="fancy-link wiki-link">Race Conditions</a>
+        <ul>
+          <li><a href="#a-day-at-the-races" class="fancy-link wiki-link">A day at the races</a></li>
+          <li><a href="#dont-cross-the-streams" class="fancy-link wiki-link">Don’t Cross the Streams</a></li>
+          <li><a href="#embarrassingly-parallel-problems" class="fancy-link wiki-link">Embarrassingly Parallel
+Problems</a></li>
+          <li><a href="#extra-scheduling" class="fancy-link wiki-link">Extra: Scheduling</a></li>
+          <li><a href="#other-problems" class="fancy-link wiki-link">Other Problems</a></li>
+          <li><a href="#extra-threads.h" class="fancy-link wiki-link">Extra: threads.h</a></li>
+          <li><a href="#extra-lightweight-processes" class="fancy-link wiki-link">Extra: Lightweight
+Processes?</a></li>
+          <li><a href="#further-reading" class="fancy-link wiki-link">Further Reading</a></li>
+        </ul>
+      </li>
+      <li><a href="#topics" class="fancy-link wiki-link">Topics</a></li>
+      <li><a href="#questions" class="fancy-link wiki-link">Questions</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p><span> </span></p>
+
+
+
+<p><strong>If you think your programs crashing before, wait until they crash ten
+times as fast</strong> - <strong>Bhuvy</strong></p>
+
+<p>A thread is short for ‘thread-of-execution’. It represents the sequence
+of instructions that the CPU has and will execute. To remember how to
+return from function calls, and to store the values of automatic
+variables and parameters a thread uses a stack. Almost weirdly, a thread
+is a process, meaning that creating a thread is similar to <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fork" class="fancy-link">fork</a></code>,
+except there is <strong>no copying</strong> meaning no copy on write. What this
+allows is for a process to share the same address space, variables,
+heap, file descriptors and etc. The actual system call to create a
+thread is similar to <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fork" class="fancy-link">fork</a></code>. It’s <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/clone" class="fancy-link">clone</a></code>. We won’t go into the
+specifics, but you can read the
+<a href="http://man7.org/linux/man-pages/man2/clone.2.html" class="fancy-link wiki-link">http://man7.org/linux/man-pages/man2/clone.2.html</a>
+keeping in mind that it is outside the direct scope of this course. LWP
+or Lightweight Processes or threads are preferred to forking for a lot
+of scenarios because there is a lot less overhead creating them. But in
+some cases, notably python uses this, multiprocessing is the way to make
+your code faster.</p>
+
+<div class="pad"><div class="card">
+<div class="title"><h2 id="processes-vs-threads" class="title-text">Processes vs threads<a class="anchor title-text" href="#processes-vs-threads">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Creating separate processes is useful when</p>
+<ul>
+  <li>
+    <p>When more security is desired. For example, Chrome browser uses
+different processes for different tabs.</p>
+  </li>
+  <li>
+    <p>When running an existing and complete program then a new process is
+required, for example starting ‘gcc’.</p>
+  </li>
+  <li>
+    <p>When you are running into synchronization primitives and each
+process is operating on something in the system.</p>
+  </li>
+  <li>
+    <p>When you have too many threads – the kernel tries to schedule all
+the threads near each other which could cause more harm than good.</p>
+  </li>
+  <li>
+    <p>When you don’t want to worry about race conditions</p>
+  </li>
+  <li>
+    <p>If one thread blocks in a task (say IO) then all threads block.
+Processes don’t have that same restriction.</p>
+  </li>
+  <li>
+    <p>When the amount of communication is minimal enough that simple IPC
+needs to be used.</p>
+  </li>
+</ul>
+<p>On the other hand, creating threads is more useful when</p>
+<ul>
+  <li>
+    <p>You want to leverage the power of a multi-core system to do one task</p>
+  </li>
+  <li>
+    <p>When you can’t deal with the overhead of processes</p>
+  </li>
+  <li>
+    <p>When you want communication between the processes simplified</p>
+  </li>
+  <li>
+    <p>When you want to threads to be part of the same process</p>
+  </li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="thread-internals" class="title-text">Thread Internals<a class="anchor title-text" href="#thread-internals">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Your main function and other functions has automatic variables. We will
+store them in memory using a stack and keep track of how large the stack
+is by using a simple pointer (the “stack pointer”). If the thread calls
+another function, we move our stack pointer down, so that we have more
+space for parameters and automatic variables. Once it returns from a
+function, we can move the stack pointer back up to its previous value.
+We keep a copy of the old stack pointer value - on the stack! This is
+why returning from a function is quick. It’s easy to ‘free’ the memory
+used by automatic variables because the program needs to change the
+stack pointer.</p>
+<p>In a multi-threaded program, there are multiple stacks but only one
+address space. The pthread library allocates some stack space and uses
+the <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/clone" class="fancy-link">clone</a></code> function call to start the thread at that stack address.</p>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/threads/drawings/thread_stack.png" alt="Thread stack
+visualization"></p>
+<p>A program can have more than one thread running inside a process. The
+programget the first thread for free! It runs the code you write inside
+‘main’. If a program need more threads, it can call <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_create" class="fancy-link">pthread_create</a></code> to
+create a new thread using the pthread library. You’ll need to pass a
+pointer to a function so that the thread knows where to start.</p>
+<p>The threads all live inside the same virtual memory because they are
+part of the same process. Thus they can all see the heap, the global
+variables, and the program code.</p>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/threads/drawings/thread_stack_pointer.png" alt="Threads pointing to the same place in the
+heap"></p>
+<p>Thus, a program can have two (or more) CPUs working on your program at
+the same time and inside the same process. It’s up to the operating
+system to assign the threads to CPUs. If a program has more active
+threads than CPUs, the kernel will assign the thread to a CPU for a
+short duration or until it runs out of things to do and then will
+automatically switch the CPU to work on another thread. For example, one
+CPU might be processing the game AI while another thread is computing
+the graphics output.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="simple-usage" class="title-text">Simple Usage<a class="anchor title-text" href="#simple-usage">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>To use pthreads, include <code class="highlighter-rouge">pthread.h</code> and compile and link with
+<code class="highlighter-rouge">-pthread</code> or <code class="highlighter-rouge">-lpthread</code> compiler option. This option tells the
+compiler that your program requires threading support. To create a
+thread, use the function <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_create" class="fancy-link">pthread_create</a></code>. This function takes four
+arguments:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">pthread_create</span><span class="p">(</span><span class="n">pthread_t</span> <span class="o">*</span><span class="kr">thread</span><span class="p">,</span> <span class="k">const</span> <span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">,</span>
+<span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">start_routine</span><span class="p">)</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>
+    <p>The first is a pointer to a variable that will hold the id of the
+newly created thread.</p>
+  </li>
+  <li>
+    <p>The second is a pointer to attributes that we can use to tweak and
+tune some of the advanced features of pthreads.</p>
+  </li>
+  <li>
+    <p>The third is a pointer to a function that we want to run</p>
+  </li>
+  <li>
+    <p>Fourth is a pointer that will be given to our function</p>
+  </li>
+</ul>
+<p>The argument <code class="highlighter-rouge">void *(*start_routine) (void *)</code> is difficult to read! It
+means a pointer that takes a <code class="highlighter-rouge">void *</code> pointer and returns a <code class="highlighter-rouge">void *</code>
+pointer. It looks like a function declaration except that the name of
+the function is wrapped with <code class="highlighter-rouge">(* .... )</code></p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">busy</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ptr will point to "Hi"</span>
+  <span class="n">puts</span><span class="p">(</span><span class="s">"Hello World"</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_t</span> <span class="n">id</span><span class="p">;</span>
+  <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">busy</span><span class="p">,</span> <span class="s">"Hi"</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="o">*</span><span class="n">result</span><span class="p">;</span>
+  <span class="n">pthread_join</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In the above example, the result will be <code class="highlighter-rouge">NULL</code> because the busy
+function returned <code class="highlighter-rouge">NULL</code>. We need to pass the address-of result because
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_join" class="fancy-link">pthread_join</a></code> will be writing into the contents of our pointer.</p>
+<p>In the man pages, it warns that programmers should use <code class="highlighter-rouge">pthread_t</code> as an
+opaque type and not look at the internals. We do ignore that often,
+though.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="pthread-functions" class="title-text">Pthread Functions<a class="anchor title-text" href="#pthread-functions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Here are some common pthread functions.</p>
+<ul>
+  <li>
+    <p><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_create" class="fancy-link">pthread_create</a></code>. Creates a new thread. Every thread gets a new
+stack. If a program calls <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_create" class="fancy-link">pthread_create</a></code> twice, Your process will
+contain three stacks - one for each thread. The first thread is
+created when the process start, the other two after the create.
+Actually, there can be more stacks than this, but let’s keep it
+simple. The important idea is that each thread requires a stack
+because the stack contains automatic variables and the old CPU PC
+register, so that it can go back to executing the calling function
+after the function is finished.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cancel" class="fancy-link">pthread_cancel</a></code> stops a thread. Note the thread may still continue.
+For example, it can be terminated when the thread makes an operating
+system call (e.g. <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/write" class="fancy-link">write</a></code>). In practice, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cancel" class="fancy-link">pthread_cancel</a></code> is rarely
+used because a thread won’t clean up open resources like files. An
+alternative implementation is to use a boolean (int) variable whose
+value is used to inform other threads that they should finish and
+clean up.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">pthread_exit(void *)</code> stops the calling thread meaning the thread
+never returns after calling <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_exit" class="fancy-link">pthread_exit</a></code>. The pthread library will
+automatically finish the process if no other threads are running.
+<code class="highlighter-rouge">pthread_exit(...)</code> is equivalent to returning from the thread’s
+function; both finish the thread and also set the return value (void
+*pointer) for the thread. Calling <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_exit" class="fancy-link">pthread_exit</a></code> in the <code class="highlighter-rouge">main</code>
+thread is a common way for simple programs to ensure that all
+threads finish. For example, in the following program, the <code class="highlighter-rouge">myfunc</code>
+threads will probably not have time to get started. On the other
+hand <code class="highlighter-rouge">exit()</code> exits the entire process and sets the process’ exit
+value. This is equivalent to <code class="highlighter-rouge">return ();</code> in the main method. All
+threads inside the process are stopped. Note the <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_exit" class="fancy-link">pthread_exit</a></code>
+version creates thread zombies; however, this is not a long-running
+process, so we don’t care.</p>
+
+    <div class="language-c highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_t</span> <span class="n">tid1</span><span class="p">,</span> <span class="n">tid2</span><span class="p">;</span>
+  <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">myfunc</span><span class="p">,</span> <span class="s">"Jabberwocky"</span><span class="p">);</span>
+  <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">myfunc</span><span class="p">,</span> <span class="s">"Vorpel"</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">keep_threads_going</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">pthread_exit</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span> <span class="c1">//or return 42;</span>
+  <span class="p">}</span>
+    
+  <span class="c1">// No code is run after exit</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">pthread_join()</code> waits for a thread to finish and records its return
+value. Finished threads will continue to consume resources.
+Eventually, if enough threads are created, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_create" class="fancy-link">pthread_create</a></code> will
+fail. In practice, this is only an issue for long-running processes
+but is not an issue for simple, short-lived processes as all thread
+resources are automatically freed when the process exits. This is
+equivalent to turning your children into zombies, so keep this in
+mind for long-running processes. In the exit example, we could also
+wait on all the threads.</p>
+
+    <div class="language-c highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="c1">// ...</span>
+<span class="kt">void</span><span class="o">*</span> <span class="n">result</span><span class="p">;</span>
+<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">);</span>
+<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">);</span>
+<span class="k">return</span> <span class="mi">42</span><span class="p">;</span>
+<span class="c1">// ...</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+<p>There are many ways to exit threads. Here is a non-complete list.</p>
+<ul>
+  <li>
+    <p>Returning from the thread function</p>
+  </li>
+  <li>
+    <p>Calling <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_exit" class="fancy-link">pthread_exit</a></code></p>
+  </li>
+  <li>
+    <p>Canceling the thread with <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cancel" class="fancy-link">pthread_cancel</a></code></p>
+  </li>
+  <li>
+    <p>Terminating the process through a signal.</p>
+  </li>
+  <li>
+    <p>calling <code class="highlighter-rouge">exit()</code> or <code class="highlighter-rouge">abort()</code></p>
+  </li>
+  <li>
+    <p>Returning from <code class="highlighter-rouge">main</code></p>
+  </li>
+  <li>
+    <p>Executing another program</p>
+  </li>
+  <li>
+    <p>Unplugging your computer</p>
+  </li>
+  <li>
+    <p>Some undefined behavior can terminate your threads, it is undefined
+behavior</p>
+  </li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="race-conditions" class="title-text">Race Conditions<a class="anchor title-text" href="#race-conditions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Race conditions are whenever the outcome of a program is determined by
+its sequence of events determined by the processor. This means that the
+execution of the code is non-deterministic. Meaning that the same
+program can run multiple times and depending on how the kernel schedules
+the threads could produce inaccurate results. The following is the
+canonical race condition.</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="o">*</span><span class="nf">thread_main</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+  <span class="n">x</span> <span class="o">+=</span> <span class="n">x</span><span class="p">;</span>
+  <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">pthread_t</span> <span class="n">one</span><span class="p">,</span> <span class="n">two</span><span class="p">;</span>
+  <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">one</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">thread_main</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+  <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">two</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">thread_main</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+  <span class="n">pthread_join</span><span class="p">(</span><span class="n">one</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="n">pthread_join</span><span class="p">(</span><span class="n">two</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Breaking down the assembly there are many different accesses of the
+code. We will assume that data is stored in the <code class="highlighter-rouge">eax</code> register. The code
+to increment is the following with no optimization (assume int_ptr
+contains eax).</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mov eax, DWORD PTR [rbp-4]    ;Loads int_ptr
+add eax, eax                  ;Does the addition
+mov DWORD PTR [rbp-4], eax    ;Stores it back
+</code></pre></div></div>
+<p>Consider this access pattern.</p>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/threads/drawings/thread_nonrace_timing.png" alt="Thread access - not a race
+condition"></p>
+<p>This access pattern will cause the variable <code class="highlighter-rouge">data</code> to be 4. The problem
+is when the instructions are executed in parallel.</p>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/threads/drawings/thread_race_timing.png" alt="Thread access - race
+condition"></p>
+<p>This access pattern will cause the variable <code class="highlighter-rouge">data</code> to be 2. This is
+undefined behavior and a race condition. What we want is one thread to
+access the part of the code at a time.</p>
+<p>But when compiled with <code class="highlighter-rouge">-O2</code>, assembly output is a single instruction.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shl dword ptr [rdi]   # Optimized way of doing the add
+</code></pre></div></div>
+<p>Shouldn’t that fix it? It is a single assembly instruction so no
+interleaving? It doesn’t fix the problems that the <em>hardware itself</em> may
+experience a race condition because we as programmers didn’t tell the
+hardware to check for it. The easiest way is to add the <em>lock</em> prefix
+(Guide <a href="#ref-guide2011intel" class="fancy-link wiki-link">#ref-guide2011intel</a>, 1120).</p>
+<p>But we don’t want to be coding in assembly! We need to come up with a
+software solution to this problem.</p>
+<div class="pad"><div class="card">
+<h4 id="a-day-at-the-races">A day at the races</h4>
+
+<p>Here is another small race condition. The following code is supposed to
+start ten threads with the integers 0 through 9 inclusive. However, when
+run prints out <code class="highlighter-rouge">1 7 8 8 8 8 8 8 8 10</code>! Or seldom does it print out what
+we expect. Can you see why?</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span><span class="kt">void</span><span class="o">*</span> <span class="nf">myfunc</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="o">*</span><span class="p">((</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">ptr</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%d "</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Each thread gets a different value of i to process</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="n">pthread_t</span> <span class="n">tid</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">myfunc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">);</span> <span class="c1">// ERROR</span>
+  <span class="p">}</span>
+  <span class="n">pthread_exit</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The above code suffers from a <code class="highlighter-rouge">race condition</code> - the value of i is
+changing. The new threads start later in the example output the last
+thread starts after the loop has finished. To overcome this
+race-condition, we will give each thread a pointer to its own data area.
+For example, for each thread we may want to store the id, a starting
+value and an output value. We will instead treat i as a pointer and cast
+it by value.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span><span class="o">*</span> <span class="nf">myfunc</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span> <span class="o">=</span> <span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">ptr</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%d "</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Each thread gets a different value of i to process</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="n">pthread_t</span> <span class="n">tid</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">myfunc</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">pthread_exit</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Race conditions aren’t in our code. They can be in provided code Some
+functions like <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/asctime" class="fancy-link">asctime</a></code>, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/getenv" class="fancy-link">getenv</a></code>, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/strtok" class="fancy-link">strtok</a></code>, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/strerror" class="fancy-link">strerror</a></code> not
+thread-safe. Let’s look at a simple function that is also not
+‘thread-safe’. The result buffer could be stored in global memory.
+This is good in a single-threaded program. We wouldn’t want to return a
+pointer to an invalid address on the stack, but there’s only one result
+buffer in the entire memory. If two threads were to use it at the same
+time, one would corrupt the other.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">to_message</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="kt">char</span> <span class="n">result</span> <span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="n">sprintf</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s">"%d : blah blah"</span> <span class="p">,</span> <span class="n">num</span><span class="p">);</span>
+  <span class="k">else</span> <span class="n">strcpy</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s">"Unknown"</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>There are ways around this like using synchronization locks, but first
+let’s do this by design. How would you fix the function above? You can
+change any of the parameters and any return types. Here is one valid
+solution.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">to_message_r</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">nbytes</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">size_t</span> <span class="n">written</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">written</span> <span class="o">=</span> <span class="n">snprintf</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">nbtytes</span><span class="p">,</span> <span class="s">"%d : blah blah"</span> <span class="p">,</span> <span class="n">num</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">strncpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s">"Unknown"</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">);</span>
+    <span class="n">buf</span><span class="p">[</span><span class="n">nbytes</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+    <span class="n">written</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">written</span> <span class="o">&lt;=</span> <span class="n">nbytes</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Instead of making the function responsible for the memory, we made the
+caller responsible! A lot of programs, and hopefully your programs,
+have minimal communication needed. Often a malloc call is less work than
+locking a mutex or sending a message to another thread.</p>
+
+<h3 id="dont-cross-the-streams" class="title-text">Don’t Cross the Streams</h3>
+
+<p>A program can fork inside a process with multiple threads! However, the
+child process only has a single thread, which is a clone of the thread
+that called <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fork" class="fancy-link">fork</a></code>. We can see this as a simple example, where the
+background threads never print out a second message in the child
+process.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="k">static</span> <span class="n">pid_t</span> <span class="n">child</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">sleepnprint</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%d:%s starting up...</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">(),</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">arg</span><span class="p">);</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="n">child</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);}</span> <span class="cm">/* Later we will use condition variables */</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%d:%s finishing...</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">getpid</span><span class="p">(),</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">arg</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_t</span> <span class="n">tid1</span><span class="p">,</span> <span class="n">tid2</span><span class="p">;</span>
+  <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">sleepnprint</span><span class="p">,</span> <span class="s">"New Thread One"</span><span class="p">);</span>
+  <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">sleepnprint</span><span class="p">,</span> <span class="s">"New Thread Two"</span><span class="p">);</span>
+
+  <span class="n">child</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%d:%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">getpid</span><span class="p">(),</span> <span class="s">"fork()ing complete"</span><span class="p">);</span>
+  <span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%d:%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">getpid</span><span class="p">(),</span> <span class="s">"Main thread finished"</span><span class="p">);</span>
+
+  <span class="n">pthread_exit</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="cm">/* Never executes */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8970:New Thread One starting up...
+8970:fork()ing complete
+8973:fork()ing complete
+8970:New Thread Two starting up...
+8970:New Thread Two finishing...
+8970:New Thread One finishing...
+8970:Main thread finished
+8973:Main thread finished
+</code></pre></div></div>
+
+<p>In practice, creating threads before forking can lead to unexpected
+errors because (as demonstrated above) the other threads are immediately
+terminated when forking. Another thread might have locked a mutex like
+by calling malloc and never unlock it again. Advanced users may find
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_atfork" class="fancy-link">pthread_atfork</a></code> useful however we suggest a program avoid creating
+threads before forking unless you fully understand the limitations and
+difficulties of this approach.</p>
+
+<h3 id="embarrassingly-parallel-problems" class="title-text">Embarrassingly Parallel Problems</h3>
+
+<p>The study of parallel algorithms has exploded over the past few years.
+An embarrassingly parallel problem is any problem that needs little
+effort to turn parallel. A lot of them have some synchronization
+concepts with them but not always. You already know a parallelizable
+algorithm, Merge Sort!</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">merge_sort</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">){</span>
+    <span class="c1">// Merge Sort the left half</span>
+    <span class="c1">// Merge Sort the right half</span>
+    <span class="c1">// Merge the two halves</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>With your new understanding of threads, all you need to do is create a
+thread for the left half, and one for the right half. Given that your
+CPU has multiple real cores, you will see a speedup following
+<a href="https://en.wikipedia.org/wiki/Amdahl's_law" class="fancy-link wiki-link">https://en.wikipedia.org/wiki/Amdahl’s_law</a>.
+The time complexity analysis gets interesting here as well. The parallel
+algorithm runs in <script type="math/tex">O(\log^3(n))</script> running time because we have the
+analysis assumes that we have a lot of cores.</p>
+
+<p>In practice though, we typically do two changes. One, once the array
+gets small enough, we ditch the Parallel Merge Sort algorithm and do
+conventional sort that works fast on small arrays, usually cache
+coherency rules at this level. The other thing that we know is that CPUs
+don’t have infinite cores. To get around that, we typically keep a
+worker pool. You won’t see the speedup right away because of things like
+cache coherency and scheduling extra threads. Over the bigger pieces of
+code though, you will start to see speedups.</p>
+
+<p>Another embarrassingly parallel problem is parallel map. Say we want to
+apply a function to an entire array, one element at a time.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="o">*</span><span class="nf">map</span><span class="p">(</span><span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">func</span><span class="p">)(</span><span class="kt">int</span><span class="p">),</span> <span class="kt">int</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">){</span>
+  <span class="kt">int</span> <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">len</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">arr</span><span class="p">));</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ret</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Since none of the elements depend on any other element, how would you go
+about parallelizing this? What do you think would be the best way to
+split up the work between threads.</p>
+
+<h3 id="extra-scheduling" class="title-text">Extra: Scheduling</h3>
+
+<p>There are a few ways to split up the work. These are common to the
+OpenMP framework (Silberschatz, Galvin, and Gagne
+<a href="#ref-silberschatz2005operating" class="fancy-link wiki-link">#ref-silberschatz2005operating</a>).</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">static scheduling</code> breaks up the problems into fixed-size chunks
+(predetermined) and have each thread work on each of the chunks.
+This works well when each of the subproblems takes roughly the same
+time because there is no additional overhead. All you need to do is
+write a loop and give the map function to each sub-array.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">dynamic scheduling</code> as a new problem becomes available to have a
+thread serve it. This is useful when you don’t know how long the
+scheduling will take</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">guided scheduling</code> This is a mix of the above with a mix of the
+benefits and tradeoffs. You start with static scheduling and move
+slowly to dynamic if needed</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">runtime scheduling</code> You have absolutely no idea how long the
+problems are going to take. Instead of deciding it yourself, let the
+program decide what to do!</p>
+  </li>
+</ul>
+
+<p>No need to memorize any of the scheduling routines though. Openmp is a
+standard that is an alternative to pthreads. For example, here is how to
+parallelize a for loop</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#pragma omp parallel for
+</span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Do stuff</span>
+<span class="p">}</span>
+
+<span class="c1">// Specify the scheduling as follows</span>
+<span class="c1">// #pragma omp parallel for scheduling(static)</span>
+</code></pre></div></div>
+
+<p>Static scheduling will divide the problem into fixed-size chunks Dynamic
+scheduling will give a job once the loop is over Guided scheduling is
+Dynamic with chunks Runtime is a whole bag of worms.</p>
+
+<h3 id="other-problems" class="title-text">Other Problems</h3>
+
+<p>From
+<a href="https://en.wikipedia.org/wiki/Embarrassingly_parallel" class="fancy-link wiki-link">https://en.wikipedia.org/wiki/Embarrassingly_parallel</a></p>
+
+<ul>
+  <li>
+    <p>Serving static files on a web server to multiple users at once.</p>
+  </li>
+  <li>
+    <p>The Mandelbrot set, Perlin noise, and similar images, where each
+point is calculated independently.</p>
+  </li>
+  <li>
+    <p>Rendering of computer graphics. In computer animation, each frame
+may be rendered independently (see parallel rendering).</p>
+  </li>
+  <li>
+    <p>Brute-force searches in cryptography.</p>
+  </li>
+  <li>
+    <p>Notable real-world examples include distributed.net and
+proof-of-work systems used in cryptocurrency.</p>
+  </li>
+  <li>
+    <p>BLAST searches in bioinformatics for multiple queries (but not for
+individual large queries)</p>
+  </li>
+  <li>
+    <p>Large scale facial recognition systems that compare thousands of
+arbitrary acquired faces (e.g., a security or surveillance video via
+closed-circuit television) with a similarly large number of
+previously stored faces (e.g., a rogues gallery or similar watch
+list).</p>
+  </li>
+  <li>
+    <p>Computer simulations comparing many independent scenarios, such as
+climate models.</p>
+  </li>
+  <li>
+    <p>Evolutionary computation meta-heuristics such as genetic algorithms.</p>
+  </li>
+  <li>
+    <p>Ensemble calculations of numerical weather prediction.</p>
+  </li>
+  <li>
+    <p>Event simulation and reconstruction in particle physics.</p>
+  </li>
+  <li>
+    <p>The marching squares algorithm</p>
+  </li>
+  <li>
+    <p>Sieving step of the quadratic sieve and the number field sieve.</p>
+  </li>
+  <li>
+    <p>Tree growth step of the random forest machine learning technique.</p>
+  </li>
+  <li>
+    <p>Discrete Fourier Transform where each harmonic is independently
+calculated.</p>
+  </li>
+</ul>
+
+<h3 id="extra-threadsh" class="title-text">Extra: threads.h</h3>
+
+<p>We have a lot of threading libraries discussed in the extra section. We
+have the standard POSIX threads, OpenMP threads, we also have a new C11
+threading library that is built into the standard. This library provides
+restricted functionality.</p>
+
+<p>Why use restricted functionality? The key is in the name. Since this is
+the C standard library, it has to be implemented in all operating
+systems that are compliant which are pretty much all of them. This means
+there is first-class portability when using threads.</p>
+
+<p>We won’t drone on about the functions. Most of them are renaming of
+pthread functions anyway. If you ask why we don’t teach these, there are
+a few reasons</p>
+
+<ol>
+  <li>
+    <p>They are pretty new. Even though the standard came out in roughly
+2011, POSIX threads have been around forever. A lot of their quirks
+have been ironed out.</p>
+  </li>
+  <li>
+    <p>You lose expressivity. This is a concept that we’ll talk about in
+later chapters, but when you make something portable, you lose some
+expressivity with the host hardware. That means that the threads.h
+library is pretty bare bones. It is hard to set CPU affinities.
+Schedule threads together. Efficiently look at the internals for
+performance reasons.</p>
+  </li>
+  <li>
+    <p>A lot of legacy code is already written with POSIX threads in mind.
+Other libraries like OpenMP, CUDA, MPI will either use POSIX
+processes or POSIX threads with a begrudging port to Windows.</p>
+  </li>
+</ol>
+
+<h3 id="extra-lightweight-processes" class="title-text">Extra: Lightweight Processes?</h3>
+
+<p>In the beginning of the chapter, we mentioned that threads are
+processes. What do we mean by that? You can create a thread like a
+process Take a look at the example code below</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// 8 KiB stacks</span>
+<span class="cp">#define STACK_SIZE (8 * 1024 * 1024)
+</span>
+<span class="kt">int</span> <span class="nf">thread_start</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Just like the pthread function</span>
+  <span class="n">puts</span><span class="p">(</span><span class="s">"Hello Clone!"</span><span class="p">)</span>
+  <span class="c1">// This share the same heap and address space!</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Allocate stack space for the child</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">child_stack</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">STACK_SIZE</span><span class="p">);</span>
+  <span class="c1">// Remember stacks work by growing down, so we need</span>
+  <span class="c1">// to give the top of the stack</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">stack_top</span> <span class="o">=</span> <span class="n">stack</span> <span class="o">+</span> <span class="n">STACK_SIZE</span><span class="p">;</span>
+
+  <span class="c1">// clone create thread</span>
+  <span class="n">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">thread_start</span><span class="p">,</span> <span class="n">stack_top</span><span class="p">,</span> <span class="n">SIGCHLD</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">perror</span><span class="p">(</span><span class="s">"clone"</span><span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Child pid %ld</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="n">pid</span><span class="p">);</span>
+
+  <span class="c1">// Wait like any child</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">waitpid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">perror</span><span class="p">(</span><span class="s">"waitpid"</span><span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It seems pretty simple right? Why not use this functionality? First,
+there is a decent bit of boilerplate code. In addition, pthreads are
+part of the POSIX standard and have defined functionality. Pthreads let
+a program set various attributes – some that resemble the option in
+clone – to customize your thread. But as we mentioned earlier, with each
+later of abstraction for portability reasons we lose some functionality.
+clone can do some neat things like keeping different parts of your heap
+the same while creating copies of other pages. A program has finer
+control of scheduling because it is a process with the same mappings.</p>
+
+<p>At no time in this course should you be using clone. But in the future,
+know that it is a perfectly viable alternative to fork. You have to be
+careful and research edge cases.</p>
+
+<h3 id="further-reading" class="title-text">Further Reading</h3>
+
+<p>Guiding questions</p>
+
+<ul>
+  <li>
+    <p>What is the first argument to pthread create?</p>
+  </li>
+  <li>
+    <p>What is the start routing in pthread create? How about arg?</p>
+  </li>
+  <li>
+    <p>Why might pthread create fail?</p>
+  </li>
+  <li>
+    <p>What are a few things that threads share in a process? What are a
+few things that threads have different?</p>
+  </li>
+  <li>
+    <p>How can a thread uniquely identify itself?</p>
+  </li>
+  <li>
+    <p>What are some examples of non thread safe library functions? Why
+might they not be thread safe?</p>
+  </li>
+  <li>
+    <p>How can a program stop a thread?</p>
+  </li>
+  <li>
+    <p>How can a program get back a thread’s “return
+value”?</p>
+  </li>
+</ul>
+
+<!-- end list -->
+
+<ul>
+  <li>
+    <p><a href="http://man7.org/linux/man-pages/man3/pthread_create.3.html" class="fancy-link wiki-link">http://man7.org/linux/man-pages/man3/pthread_create.3.html</a></p>
+  </li>
+  <li>
+    <p><a href="http://man7.org/linux/man-pages/man7/pthreads.7.html" class="fancy-link wiki-link">http://man7.org/linux/man-pages/man7/pthreads.7.html</a></p>
+  </li>
+  <li>
+    <p><a href="http://www.thegeekstuff.com/2012/04/terminate-c-thread/" class="fancy-link wiki-link">http://www.thegeekstuff.com/2012/04/terminate-c-thread/</a></p>
+  </li>
+</ul>
+
+</div></div>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="topics" class="title-text">Topics<a class="anchor title-text" href="#topics">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><ul>
+  <li>
+    <p>pthread life-cycle</p>
+  </li>
+  <li>
+    <p>Each thread has a stack</p>
+  </li>
+  <li>
+    <p>Capturing return values from a thread</p>
+  </li>
+  <li>
+    <p>Using <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_join" class="fancy-link">pthread_join</a></code></p>
+  </li>
+  <li>
+    <p>Using <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_create" class="fancy-link">pthread_create</a></code></p>
+  </li>
+  <li>
+    <p>Using <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_exit" class="fancy-link">pthread_exit</a></code></p>
+  </li>
+  <li>
+    <p>Under what conditions will a process exit</p>
+  </li>
+</ul></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="questions" class="title-text">Questions<a class="anchor title-text" href="#questions">#</a>
+</h2></div>
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<ul>
+  <li>
+    <p>What happens when a pthread gets created?</p>
+  </li>
+  <li>
+    <p>Where is each thread’s stack?</p>
+  </li>
+  <li>
+    <p>How does a program get a return value given a <code class="highlighter-rouge">pthread_t</code>? What are
+the ways a thread can set that return value? What happens if a
+program discards the return value?</p>
+  </li>
+  <li>
+    <p>Why is <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_join" class="fancy-link">pthread_join</a></code> important (think stack space, registers,
+return values)?</p>
+  </li>
+  <li>
+    <p>What does <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_exit" class="fancy-link">pthread_exit</a></code> do if it is not the last thread? What other
+functions are called when after calling pthread_exit?</p>
+  </li>
+  <li>
+    <p>Give me three conditions under which a multi-threaded process will
+exit. Are there any more?</p>
+  </li>
+  <li>
+    <p>What is an embarrassingly parallel problem?</p>
+  </li>
+</ul>
+<div id="refs" class="references">
+
+<div id="ref-guide2011intel">
+
+Guide, Part. 2011. “Intel 64 and Ia-32 Architectures Software
+Developer’s Manual.” *Volume 3B: System Programming Guide, Part* 2.
+
+</div>
+
+<div id="ref-silberschatz2005operating">
+
+Silberschatz, A., P.B. Galvin, and G. Gagne. 2005. *Operating System
+Concepts*. Wiley.
+<a href="https://books.google.com/books?id=FH8fAQAAIAAJ" class="fancy-link wiki-link">https://books.google.com/books?id=FH8fAQAAIAAJ</a>.
+
+</div>
+
+</div>
+</div></div></div>
+</div></div>
+</div>
+          
+          <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_coursebook/Threads.md";
+  </script>
+  <!-- Mathjax takes a while to load so do a lazy load to so we can get accessibility -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" crossorigin="anonymous"></script>
+
+<!-- Bring in JQuery and Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<footer class="">
+
+<!-- Add another container at the bottom so there is some space there -->
+<div class="container-fluid">
+<div class="shadow"></div>
+
+</div>
+
+</footer>
+
+</body>
+
+<!-- Mirrored from cs241.cs.illinois.edu/coursebook/Threads by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:37:32 GMT -->
+</html>

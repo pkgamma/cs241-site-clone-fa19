@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from cs241.cs.illinois.edu/assignments/parallel_make.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:32:32 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="utf-8">
+
+  <!-- If for some reason you are using IE, use edge -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- So bootstrap isn't horrible, set the width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="../images/favicons/manifest.json">
+  <link rel="mask-icon" href="../images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>CS 241 · Parallel Make</title>
+
+  <!-- Reference a CDN so this is properly cached in the browser forever. Unless they clean out the
+       Cache this will incur no load time. Ideally we should put a security checksum but that breaks
+       Firefox development sometimes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <!-- Asynchronously load the code style sheet because we want everything loaded as fast as possible
+       Also tag with ?v=time to bust the cache of any browser so updates appear -->
+  <style rel="stylesheet" type="text/css">.highlight table td{padding:5px}.highlight table pre{margin:0}.highlight,.highlight .w{color:#93a1a1;background-color:#002b36}.highlight .err{color:#002b36;background-color:#dc322f}.highlight .c,.highlight .cd,.highlight .cm,.highlight .c1,.highlight .cs{color:#657b83}.highlight .cp{color:#b58900}.highlight .nt{color:#b58900}.highlight .o,.highlight .ow{color:#93a1a1}.highlight .p,.highlight .pi{color:#93a1a1}.highlight .gi{color:#859900}.highlight .gd{color:#dc322f}.highlight .gh{color:#268bd2;background-color:#002b36;font-weight:bold}.highlight .k,.highlight .kn,.highlight .kp,.highlight .kr,.highlight .kv{color:#6c71c4}.highlight .kc{color:#cb4b16}.highlight .kt{color:#cb4b16}.highlight .kd{color:#cb4b16}.highlight .s,.highlight .sb,.highlight .sc,.highlight .sd,.highlight .s2,.highlight .sh,.highlight .sx,.highlight .s1{color:#859900}.highlight .sr{color:#2aa198}.highlight .si{color:#d33682}.highlight .se{color:#d33682}.highlight .nn{color:#b58900}.highlight .nc{color:#b58900}.highlight .no{color:#b58900}.highlight .na{color:#268bd2}.highlight .m,.highlight .mf,.highlight .mh,.highlight .mi,.highlight .il,.highlight .mo,.highlight .mb,.highlight .mx{color:#859900}.highlight .ss{color:#859900}
+/*# sourceMappingURL=/assets/source-maps/code-style.css.map */
+/*# sourceURL=css/code-style.css */
+</style>
+  <style rel="stylesheet" type="text/css">:root{--color-primary: hsl(207, 59%, 43%);--color-secondary: hsl(207, 70%, 53%);--color-emphasis: hsl(204, 100%, 42%);--color-text: hsl(0, 0%, 0%);--color-translucent: hsla(0, 0%, 0%, 0.3);--color-pale-white: hsla(240, 8%, 95%)}body{padding-top:50px;font-family:Roboto, Helvetica, Arial, sans-serif;background-color:var(--color-pale-white);color:var(--color-text);padding-bottom:50px}@media (min-width: 768px) and (max-width: 991px){body{padding-top:100px}}.navbar{background-color:var(--color-primary);border-color:var(--color-secondary);border:0px;border-top:none;box-shadow:none;margin-bottom:0}.navbar-default .navbar-brand{color:var(--color-pale-white) !important;font-weight:bold}.navbar-default .navbar-nav>li>a{color:var(--color-pale-white) !important}.navbar-collapse{border-top:0px !important;box-shadow:none}.navbar-brand:hover{color:var(--color-navbar-text) !important}.github-link{display:inline-block;vertical-align:middle;margin-left:0.5em;text-indent:-9999px;width:32px;height:32px;background-image:url(NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjMTgxNjE2IiBkPSJNMzIuNiwzLjRDMTYuMywzLjQsMywxNi43LDMsMzMuMWMwLDEzLjEsOC41LDI0LjIsMjAuMywyOC4xDQoJYzEuNSwwLjMsMi0wLjYsMi0xLjRjMC0wLjcsMC0yLjYsMC01Yy04LjIsMS44LTEwLTQtMTAtNGMtMS4zLTMuNC0zLjMtNC4zLTMuMy00LjNjLTIuNy0xLjgsMC4yLTEuOCwwLjItMS44YzMsMC4yLDQuNSwzLjEsNC41LDMuMQ0KCWMyLjYsNC41LDYuOSwzLjIsOC42LDIuNWMwLjMtMS45LDEtMy4yLDEuOS00Yy02LjYtMC43LTEzLjUtMy4zLTEzLjUtMTQuNmMwLTMuMiwxLjItNS45LDMtNy45Yy0wLjMtMC43LTEuMy0zLjgsMC4zLTcuOA0KCWMwLDAsMi41LTAuOCw4LjEsM2MyLjQtMC43LDQuOS0xLDcuNC0xYzIuNSwwLDUsMC4zLDcuNCwxYzUuNy0zLjgsOC4xLTMsOC4xLTNjMS42LDQuMSwwLjYsNy4xLDAuMyw3LjhjMS45LDIuMSwzLDQuNywzLDcuOQ0KCWMwLDExLjQtNi45LDEzLjktMTMuNSwxNC42YzEuMSwwLjksMiwyLjcsMiw1LjVjMCw0LDAsNy4yLDAsOC4xYzAsMC44LDAuNSwxLjcsMiwxLjRjMTEuOC0zLjksMjAuMi0xNSwyMC4yLTI4LjENCglDNjIuMiwxNi43LDQ5LDMuNCwzMi42LDMuNHoiLz4NCjwvc3ZnPg0K)}h1{padding-bottom:20px;font-size:48px}h2{padding-top:50px;margin-top:-20px}.navbar-nav,.navbar-nav>ul{margin:0}@media (max-width: 767px){h1{font-size:36px}h2{font-size:22px}p,li{font-size:12px}}.popover{background-color:black;color:black;display:block}.popover-title{background-color:black;color:black;font-size:12px;text-align:center;border-bottom:0px}.popover-title a{color:white;cursor:pointer}.popover-content{background-color:black;padding:0px}.popover.top>.arrow:after{border-top-color:black}table{width:100%}.anchor{display:none;padding-left:5px}.title-text:hover>.anchor{display:inline}.day{height:300px;margin-bottom:20px;width:100%;background-color:#fff;border-radius:3px}.day h1{color:#f1f1f3}.day-summary,.day-resources{color:#000}.day-resources{position:absolute;bottom:20px}.day-summary{position:absolute;top:75px}.day-title-text h3{margin:0px}.day-title{padding-top:5px;padding-bottom:5px;border-radius:3px;height:70px}.schedule-container{margin-left:20px;margin-right:20px}ul.toc{list-style:none;padding-left:1em}h1,h2,h3{color:var(--color-secondary)}.announcement-card{background-color:var(--color-pale-white);border-radius:5px}.annoucement-title{margin-top:5px}.day-title-h3{color:var(--color-pale-white)}img:not(.emoji){max-height:80vh;display:inline-block;margin:auto;max-width:100%}.img-paragraph{display:grid}.hidden{display:none !important}.loader,.loader:before,.loader:after{border-radius:50%}.loader{color:var(--color-pale-white);font-size:11px;text-indent:-99999em;margin:55px auto;position:relative;width:10em;height:10em;box-shadow:inset 0 0 0 1em;-webkit-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0)}.loader:before,.loader:after{position:absolute;content:''}.loader:before{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:10.2em 0 0 10.2em;top:-0.1em;left:-0.1em;-webkit-transform-origin:5.2em 5.1em;transform-origin:5.2em 5.1em;-webkit-animation:load2 2s infinite ease 1.5s;animation:load2 2s infinite ease 1.5s}.loader:after{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:0 10.2em 10.2em 0;top:-0.1em;left:5.1em;-webkit-transform-origin:0px 5.1em;transform-origin:0px 5.1em;-webkit-animation:load2 2s infinite ease;animation:load2 2s infinite ease}@-webkit-keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.anchor{text-decoration:none}.anchor:hover{text-decoration:none}.fancy-link{text-decoration:none !important;color:var(--color-emphasis);display:inline-block;position:relative;padding-bottom:0px}.fancy-link:after{content:'';display:block;margin:auto;height:1px;width:0px;background:transparent;transition:width .3s ease, background-color .3s ease}.fancy-link:hover:after{width:100%;background:var(--color-emphasis)}.container-fluid{padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}.navbar-toggle{border-width:0px}.navbar-default .navbar-toggle .icon-bar{background-color:var(--color-pale-white)}.navbar-brand.small{display:none}@media (max-width: 767px){.navbar-brand.normal{display:none}.navbar-brand.small{display:inline-block}}.speaker-wrapper{float:right}.speaker{background-image:url("data:image/png;base64,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");background-size:cover;height:40px;width:40px;margin-top:5px}pre{color:var(--color-pale-white);background-color:var(--color-text);border:inherit}code{color:var(--color-pale-white)}.code-copy{float:right;right:0px;display:none;background-color:var(--color-text);padding:5px 5px 5px 5px;border-radius:3px;cursor:pointer}pre code{display:block}pre:hover>*>.code-copy{display:inline}.code-copy-textarea{position:absolute;left:-9999px;top:-9999px}pre.highlight{margin-bottom:-10px;padding-bottom:0px}.highlighter-rouge{background-color:#DFDFDF;color:#151515;border-radius:5px;padding-top:4px}.highlight{background-color:#151515;border:0px;color:#F2F2F4}div.highlighter-rouge,figure.highlighter-rouge{background-color:#151515;color:#D7D7D7;padding-bottom:1.5em;margin-bottom:0.65em}.fancy-link code{color:#337ab7}.fancy-link:hover code{color:#23527c}.fancy-link:hover:after code{background-color:#337ab7}.table>tbody>tr>td,table>tbody>tr>td,.table>tbody>tr>th,table>tbody>tr>th,.table>tfoot>tr>td,table>tfoot>tr>td,.table>tfoot>tr>th,table>tfoot>tr>th,.table>thead>tr>td,table>thead>tr>td,.table>thead>tr>th,table>thead>tr>th{border-top:0px}.table,table{margin-left:40px;width:75%}.search-icon-div{width:initial;padding-left:10px;background-color:white;height:34px;border-radius:3px 0px 0px 3px}.glyphicon-search{font-size:32px;top:0px;color:#2C72AD}.search{border-radius:0px 3px 3px 0px;border:0px;outline:none;box-shadow:none}.no-gutter>[class*='col-']{padding-right:0;padding-left:0}.result-link{font-size:24px;text-decoration:underline}.result-div{padding-bottom:12px}.highlight-result{background-color:yellow;border-radius:3px;color:black;padding-left:2px;padding-right:2px}tbody tr:nth-child(odd){background-color:#DDD;border-radius:20px}html.hacker,body.hacker,header.hacker,nav.hacker,:not(.card-staff)>*>div:not(.card-staff).hacker,table.hacker,pre.hacker,span.hacker,:not(.card-staff)>a.hacker,p.hacker,h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:white !important;font-family:monospace !important;background-color:black !important}h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:#20C20E !important}ul.hacker{list-style-type:square}pre.hacker{border-color:white;border-radius:0}.toc.hacker{border-left-width:0}.content .highlighter-rouge.hacker{font-weight:bold;background-color:black}.pad.hacker{padding:0}a.hacker{color:#20C20E}tbody tr:nth-child(odd).hacker{background-color:inherit}body.hacker .day,body.hacker .announcement-card{background-color:#151515}body.hacker .announcement{color:white !important}#tuxlink img.hacker{-ms-interpolation-mode:nearest-neighbor;image-rendering:pixelated}.apply-button{border:none;background-color:white;padding:10px 20px 10px 20px;font-size:36px;border-radius:5px;box-shadow:5px 5px gray;margin:10px auto 10px auto;display:block;transition:background-color 0.5s ease}.apply-button:hover{background-color:var(--color-primary)}li.navbar-subitem{float:left;overflow:hidden;width:100%}.navbar-item,.navbar-subitem{color:var(--color-navbar-text);text-align:center;font-family:'Roboto', sans-serif}li.navbar-item:hover,li.navbar-subitem:hover{background-color:white}li.navbar-item:hover>a,li.navbar-subitem:hover>a{color:var(--color-primary) !important}.subitem-container{display:none;position:absolute;min-width:8vw;background-color:var(--color-primary);box-shadow:0px 8px 16px 0px var(--color-translucent);z-index:1;width:100%}.navbar-item:hover .subitem-container{display:block}.staff{width:100%}.flexbox-item div.staff-image{width:18vh;height:18vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.flexbox-item:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-weight:100;padding-top:2vh;color:var(--color-secondary-emphasis)}.heading{text-align:center;font-family:Roboto, Helvetica, sans-serif;font-size:3em;padding:1em;padding:0}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}main{text-align:center;margin:0;padding:0;background-color:white}.card-body{background-color:var(--color-pale-white);padding:2vh;display:block}.card-body.course-heading{background-color:rgba(72,105,255,0.945)}.card-body.card-body.course-heading h1{color:white}.card-body.course-information{background-color:white}h2{font-weight:200}section.flexbox{display:flex;justify-content:center;margin:auto;flex-wrap:wrap;width:90vw}.flexbox-item{display:inline-block;padding:2vh;margin:2vh}img.logo{width:2vw;height:3vw;margin:2vh}@media (max-width: 480px){.flexbox-item div.staff-image{width:18vh;height:18vh}img.logo{width:10vw;height:8vh}.staff-name{font-size:0.75em}}.infrastructure-links{margin:auto;text-align:center;display:block}.gallery{display:flex;justify-content:center;margin:auto;padding:5vw;flex-wrap:wrap;width:100vw}.staff{width:100%}.staff-container{margin:2vh}.staff-container div.staff-image{width:24vh;height:24vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.staff-container:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-size:1.5em;padding-top:1vh;color:var(--color-emphasis)}.heading{text-align:center}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}@media only screen and (max-width: 480px){.staff-container div.staff-image{width:20vh;height:20vh}.staff-name{font-size:1.25em}}.latest-mp{background-color:rgba(16,213,147,0.85)}.latest-lab{background-color:rgba(255,102,42,0.85)}.latest-assignments section.flexbox-item{border-radius:4%}
+/*# sourceMappingURL=/assets/source-maps/main.css.map */
+/*# sourceURL=css/main.css */
+</style>
+
+  <meta property="og:locale" content="en_US">
+  
+  
+  <meta property="og:title" content="Parallel Make" />
+  
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="http://cs241.cs.illinois.edu" />
+  
+  
+  <meta property="og:description" content=""Webpage for CS 241: System Programming at the University of Illinois at Urbana-Champaign. All documentation and information about the course can be found here."
+" />
+  
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- Navigation button as html so we don't have to resize images -->
+      <button
+        type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-expanded="false"
+        aria-controls="navbar"
+      >
+        <!-- Hamburger Navigation bar on small -->
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Full title on laptop -->
+      <a class="navbar-brand navbar-item normal" href="../index.html">
+             <span>CS 241: System Programming</span> 
+      </a>
+
+      <!-- Smaller on mobile-->
+      <a class="navbar-brand navbar-item small" href="../index.html">
+          <span>CS 241</span>
+      </a>
+    </div>
+
+    <!-- Finally generate what is in the navbar -->
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        <li class="navbar-item">
+          <a href="../assignments.html">Assignments</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../quiz_topics.html">Quizzes</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../grades.html">Grades</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../schedule.html">Schedule</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../lectures.html">Lectures</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../syllabus.html">Syllabus</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../staff.html">Staff</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../staff_hall_of_fame.html">Staff Hall of Fame</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../resources.html">Resources</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../peer_tutoring.html">Peer Tutoring</a>
+            </li>
+            
+            <li class="navbar-subitem">
+              <a href="../coursebook/index.html">Coursebook</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../honors.html">Honors</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto"
+    rel="stylesheet"
+  />
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            
+            
+            
+            <h1>
+              Parallel Make
+
+              
+                <a class="github-link hidden-xs" href="https://github.com/illinois-cs241/assignment-docs/blob/master//parallel_make.md">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+              <div class="submission-wrapper">
+                
+                  <b>Part 1</b> due <b>2019-10-28 23:59</b><br/>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>parmake.c</li>
+                      
+                    </ul>
+                  
+                
+                  <b>Part 2</b> due <b>2019-11-04 23:59</b><br/>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>parmake.c</li>
+                      
+                    </ul>
+                  
+                
+              </div>
+            
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_introduction" href="#introduction" class="fancy-link">Introduction</a></li>
+<li><a id="toc_resource-allocation-graphs" href="#resource-allocation-graphs" class="fancy-link">Resource Allocation Graphs</a></li>
+<li><a id="toc_program-inputs" href="#program-inputs" class="fancy-link">Program Inputs</a></li>
+<li><a id="toc_process-the-makefile" href="#process-the-makefile" class="fancy-link">Process the Makefile</a></li>
+<li><a id="toc_graph-data-structure" href="#graph-data-structure" class="fancy-link">Graph Data Structure</a></li>
+<li><a id="toc_graph-searching-and-cycle-detection" href="#graph-searching-and-cycle-detection" class="fancy-link">Graph Searching and Cycle Detection</a></li>
+<li><a id="toc_satisfy-the-rules" href="#satisfy-the-rules" class="fancy-link">Satisfy the rules</a></li>
+<li><a id="toc_parallelize-part-2-only" href="#parallelize-part-2-only" class="fancy-link">Parallelize! (Part 2 Only)</a></li>
+<li><a id="toc_example" href="#example" class="fancy-link">Example</a></li>
+<li><a id="toc_compiling-and-running" href="#compiling-and-running" class="fancy-link">Compiling and Running</a></li>
+<li><a id="toc_grading" href="#grading" class="fancy-link">Grading</a></li>
+</ul>
+</div>
+      
+      <div id="content">
+          <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Parallel Make are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Parallel Programming with Dependencies</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Using a Threadsafe Data structure</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Resource Allocation Graphs (RAG)</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Deadlock Detection</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Synchronization</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+          <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="introduction" class="title-text">Introduction<a class="anchor title-text" href="#introduction">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>More and more programs today are being programmed as multithreaded applications.
+The goal of this MP is to give you more practice writing multithreaded applications and to expose common pitfalls that occur while designing a program to work in a parallel manner.
+Additionally, you will need to make use of synchronization primitives to protect the memory shared amongst the threads.</p>
+<p>You are given a task of writing an application which will imitate the common <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> utility.
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> is a utility that automatically builds executable programs from source code by reading files called <code class="highlighter-rouge">Makefiles</code> which specify how to derive the program.
+You have encountered Makefiles in CS 241 MPs as well as in your previous undergraduate CS classes and should be familiar with them.</p>
+<p>We have provided the code to parse a <code class="highlighter-rouge">Makefile</code> and list the dependencies and commands specified in the file.
+Once the file is parsed, you will need to perform the actions specified by the <code class="highlighter-rouge">Makefile</code> following the rules specified later in the docs.
+Using a fixed pool of threads, you will parallelize this execution process such that all commands are executed as soon as their dependencies are satisfied.</p>
+<p>Before starting you should read the Wikipedia article on <a href="http://en.wikipedia.org/wiki/Make_(software)" class="fancy-link wiki-link">Make</a>.</p>
+<p>You might also want to look <a href="https://web.archive.org/web/20170202011246/http://www.cs.umd.edu/class/fall2002/cmsc214/Tutorial/makefile.html" class="fancy-link wiki-link">here</a> for some notes that explain makefiles really well.
+(They start with some C++ specific details but you can skip to the ‘Now, makefiles’ section. Also, do note that the makefile for this MP does NOT use makefile macros.)</p>
+<p><strong>THIS IS A HARD MP. WE RECOMMEND THAT YOU START EARLY.</strong></p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="resource-allocation-graphs" class="title-text">Resource Allocation Graphs<a class="anchor title-text" href="#resource-allocation-graphs">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>A good way to think about this MP at a high level is by using a model <a href="../coursebook/Deadlock.html#resource-allocation-graphs" class="fancy-link wiki-link">covered in lecture</a>, Resource Allocation Graphs. You can think of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> rules as nodes in the graph and dependency relations as directed edges that point from rules to dependencies. This visualization comes in handy when we are dealing with programs that may encounter deadlock. Given that a <code class="highlighter-rouge">Makefile</code> may contain a circular dependency (what are the required conditions for a program to deadlock?), keep this model at the back of your mind when building your solution.</p>
+<p>Here is an example Makefile:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d: a c
+	echo D
+a: b
+	echo A
+b: a
+	echo B
+c:
+	echo C
+</code></pre></div></div>
+<p>The following graph represents the above Makefile. Note that ‘a’ and ‘b’ form a cycle (-&gt; ‘b’ -&gt; ‘a’ -&gt;).</p>
+<p class="img-paragraph"><img src="../images/assignment-docs/mp/parallel_make/ColorfulDeadlock.svg" alt="Makefile Graph"></p>
+<p>Some more resources on RAGs &amp; Deadlock: <a href="https://en.wikipedia.org/wiki/Deadlock" class="fancy-link wiki-link">Wikipedia</a>, <a href="../coursebook/Deadlock.html#resource-allocation-graphs" class="fancy-link wiki-link">Coursebook</a>.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="program-inputs" class="title-text">Program Inputs<a class="anchor title-text" href="#program-inputs">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>The input for this MP will be in the following form:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./path/to/parmake [-f path/to/makefile] [-j positive-integer] [targets ...]
+</code></pre></div></div>
+<p>The input parsing step is already handled for you in <code class="highlighter-rouge">parmake_main.c</code>. The Makefile, thread count, and target list will be provided as arguments to the <code class="highlighter-rouge">parmake()</code> function, which you will have to implement.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="process-the-makefile" class="title-text">Process the Makefile<a class="anchor title-text" href="#process-the-makefile">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>The first thing you will need to do is to parse the Makefile into a dependency graph.</p>
+<p>The Makefile will always consist of one or more rules of the form:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>target [target ...]: [dependency ...]
+    [command 1]
+    .
+    .
+    [command n]
+</code></pre></div></div>
+<p>For example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rule1: rule2 rule3
+    commandtoberun withargs
+    commandtoberun2 withargs
+
+rule2:
+    othercommand
+
+rule3 rule4:
+    finalcommand
+</code></pre></div></div>
+<p>You may want to take a look at the <a href="https://en.wikipedia.org/wiki/Make_(software)" class="fancy-link wiki-link">Wikipedia page</a> if you do not know how to read or write a basic Makefile. However, you will not need to parse the Makefile yourself. Instead,
+you must use the <code class="highlighter-rouge">parser_parse_makefile()</code> function to represent the Makefile as a dependency graph.</p>
+<p><code class="highlighter-rouge">parser_parse_makefile()</code> takes the filename and a <code class="highlighter-rouge">NULL</code>-terminated array of strings as inputs.</p>
+<p>The array of strings specify the targets you are planning to run. Remember, if the array is null or empty, the parser will use the first target found in the Makefile. The parser returns a graph data structure containing all rules and dependencies in the <code class="highlighter-rouge">Makefile</code>, <em>including those that do not need to be executed</em>.</p>
+<p>For example, suppose we have the following Makefile:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a: b c
+    echo A
+b: c
+    echo B
+c:
+    echo C
+d:
+    echo D
+</code></pre></div></div>
+<p>The parser will return a graph containing 5 vertices, once each for rule ‘a’, ‘b’, ‘c’, and ‘d’, as well as one sentinel (labeled as an empty string) whose neighbor is rule ‘a’ (i.e. the only <a href="https://www.gnu.org/software/make/manual/html_node/Goals.html" class="fancy-link wiki-link">goal</a> rule).</p>
+<p>Those curious of the implementation can view the source in <code class="highlighter-rouge">parser.c</code> although this is not necessary.</p>
+<p>We have provided an implementation of a thread safe queue, a vector, a set, a dictionary, and a graph. This is the same queue from luscious locks and the same vector you’ve used in prior assignments. The set, graph, and dictionary are new data structures from the CS 241 provided library. 
+You can view the header information in <code class="highlighter-rouge">includes/</code>.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="graph-data-structure" class="title-text">Graph Data Structure<a class="anchor title-text" href="#graph-data-structure">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Since a Makefile is a representation of a dependency graph, our parser returns a directed graph data structure. You may find the graph API in <code class="highlighter-rouge">includes/graph.h</code>. To access Makefile rules from this graph, you would use</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rule_t * rule = (rule_t *)graph_get_vertex_value(dependency_graph, target)
+</code></pre></div></div>
+<p>where <code class="highlighter-rouge">target</code> is a string labelling a rule. To get a list of all targets, use</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vector *targets = graph_vertices(dependency_graph)
+</code></pre></div></div>
+<p>To get a list of all the dependencies of a rule with a given target, use</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vector *dependencies = graph_neighbors(dependency_graph, target)
+</code></pre></div></div>
+<p>The graph returned from the <code class="highlighter-rouge">parmake</code> parser will contain all the vertices and edges depicting rules and dependencies in a Makefile. In addition, it will contain an empty sentinel rule (with key “”) whose neighbors are the goal rules. <em>Do not execute this rule</em>. Instead, you should only work on rules that descend from this rule (i.e. the goal rules and all their descendants). Here, “B descends from A” means that ‘A’ implicitly depends on ‘B’ to run.</p>
+<p>See <code class="highlighter-rouge">rule.h</code> for a description of the <code class="highlighter-rouge">rule_t</code> API. And read <code class="highlighter-rouge">parser.h</code> for more usage details on the dependency graph.</p>
+<p><strong>USAGE WARNINGS</strong>:</p>
+<ul>
+  <li>
+    <p>Any vectors returned from graph functions must be destroyed manually to prevent memory leaks. Destroying these vectors will not destroy anything in the actual graph.</p>
+  </li>
+  <li>Destroying the graph or removing vertices from the graph will completely destroy all associated targets (i.e. rule labels), rules, and edges. So copy anything you need for later use before removal or destruction.</li>
+  <li>
+    <p>You should not add new vertices to the graph. If you choose to do this using <code class="highlighter-rouge">graph_set_vertex()</code>, keep in mind that both the key and value must be <em>strings</em>, since the graph’s value copy constructor transforms strings to new <code class="highlighter-rouge">rule_t</code> structs. Read <code class="highlighter-rouge">parser.c</code> in order to understand the dependency graph’s memory management scheme.</p>
+  </li>
+  <li>
+<strong>The graph and vector classes are <em>not</em> thread-safe!</strong> You must enforce mutual exclusion if multiple threads are to concurrently modify and access these structures.</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="graph-searching-and-cycle-detection" class="title-text">Graph Searching and Cycle Detection<a class="anchor title-text" href="#graph-searching-and-cycle-detection">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>GNU <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> handles cyclical dependencies by attempting to delete edges that cause cycles. If you tried to call <code class="highlighter-rouge">make d</code> on the example Makefile shown earlier, GNU <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> would essentially attempt to convert that Makefile to this one:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d: a c
+	echo D
+a: b
+	echo A
+b:  #a (comment out 'a': no more cycles if you remove this edge!)
+	echo B
+c:
+	echo C
+</code></pre></div></div>
+<p>To highlight the importance of cycle detection in resource allocation schemes, we also require that you explicitly handle cycles. However, <em>your implementation of parmake will ignore all goal rules whose descendants belong to cycles</em>. That is, calling <code class="highlighter-rouge">./parmake d</code> on this makefile would execute nothing, since ‘d’ cannot be satisfied due to the cyclical dependency (-&gt; ‘a’ -&gt; ‘b’ -&gt;). However, calling <code class="highlighter-rouge">./parmake c</code> will still execute <code class="highlighter-rouge">echo C</code>, since the (nonexistent) descendants of ‘c’ don’t belong to cycles.</p>
+<p>Moreover, you must announce any goal rules that are dropped due to existence of cyclical dependencies using the function <code class="highlighter-rouge">print_cycle_failure()</code> found in <code class="highlighter-rouge">format.h</code>. Read the header file for usage information.</p>
+<p>Since this MP requires you to implement some graph algorithms, you may want to consult <a href="http://www.cs.cornell.edu/courses/cs2112/2012sp/lectures/lec24/lec24-12sp.html" class="fancy-link wiki-link">this resource</a> to jog your CS 225 memory.</p>
+<p>Note: You do NOT have to parallelize cycle detection and essential rule extraction. You only need to parallelize the execution of commands.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="satisfy-the-rules" class="title-text">Satisfy the rules<a class="anchor title-text" href="#satisfy-the-rules">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Each rule depends on a (possibly empty) set of other rules. It is important to note that every dependency will be a rule, even if the dependency isn’t explicitly defined in the Makefile. For example, these two Makefiles are equivalent:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Makefile 1
+a: b
+	echo A
+# Makefile 2
+a: b
+    echo A
+b:
+</code></pre></div></div>
+<p>Some rules might also be files on the disk. A rule can be satisfied if and only if all of rules that it depends on have been satisfied and none of them have failed (See what determines a failed rule in Running Commands).</p>
+<p>Note that you shouldn’t try to satisfy rules that aren’t “good” goal rules and don’t have any “good” goal rules as ancestors. Specifically, you should not try to satisfy a rule if any of the following is true:</p>
+<ol>
+  <li>the rule is a goal rule, but is involved in a cycle, i.e. there exists a path from the rule to itself in the dependency graph</li>
+  <li>the rule is a goal rule, but at least one of its descendants, i.e. any rule in the dependency graph reachable from the goal rule, is involved in a cycle</li>
+  <li>the rule is not a goal rule, and it has no ancestors that are goal rules</li>
+  <li>the rule is not a goal rule, and all of its goal rule ancestors fall under <em>(1)</em> or <em>(2)</em>
+</li>
+</ol>
+<p>Basically, there is no need to satisfy a rule if it isn’t necessary to satisfy the goal rules or if we already know that all the goal rules it might satisfy are doomed to fail due to cycles. Trying to satisfying any of them would be impossible at worst or a waste of time at best.</p>
+<p>As an extension of this idea on efficiency, if a rule fails once, it should not be run again even if it is asked for by another goal rule.
+Similarly, if a rule succeeds, it should only be run once, even if it is added as a goal rule multiple times. (To think why this should be the case, imagine the behavior of Make if you ask it to compile your code multiple times in one line.)</p>
+<p>When a rule is ready to be satisfied, we must determine if we actually need to run the rule’s commands. We run its commands if and only if at least one of the following is true:</p>
+<ul>
+  <li>The name of the rule is not the name of a file on disk.
+<strong>Example:</strong>
+</li>
+</ul>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clean :
+    rm -rf *
+</code></pre></div></div>
+<p>or</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>makenewfile:
+    touch newfile
+</code></pre></div></div>
+<ul>
+  <li>The rule depends on another rule that is not the name of a file on disk.
+<strong>Example:</strong>
+</li>
+</ul>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clean : take_backup
+    rm -rf *
+take_backup :
+    cp -r * ../backup
+</code></pre></div></div>
+<ul>
+  <li>The rule is the name of a file on disk, and it depends on another file with a NEWER change time than the change time of the file which corresponds to the name of the rule. To determine whether a file is NEWER, you should use stat and difftime to determine if it is newer. The differences in time will have a granularity of 1 second.</li>
+</ul>
+<p>If neither of these is true, then the rule is already satisfied and does not need its commands executed. Otherwise, the rule is unsatisfied and available to be run.</p>
+<h3 id="running-the-commands" class="title-text">Running the commands</h3>
+<p>You can use <code class="highlighter-rouge">system()</code> to run the commands associated with each rule. There are a few conditions to think about when running these commands:</p>
+<ul>
+  <li>The rule’s commands need to be run sequentially in the order they appear in the command vector</li>
+  <li>If any of a rule’s commands fail while evaluating that rule, then the rule should “fail” and no more of its commands should be run</li>
+  <li>If a rule fails, its parent rules (rules which have this rule as a dependency) should fail as well. Note that this is not necessarily true for the converse (i.e. if a parent fails, its children may still be satisfied)</li>
+</ul>
+<p>For your convenience these rules are captured in the following flow chart (open this image in a new tab if you cannot see the flowchart clearly):</p>
+<p class="img-paragraph"><img src="../images/assignment-docs/mp/parallel_make/parmake_flowchart.svg" alt="Flow Chart"></p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="parallelize-part-2-only" class="title-text">Parallelize! (Part 2 Only)<a class="anchor title-text" href="#parallelize-part-2-only">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><code class="highlighter-rouge">parmake</code> must satisfy all of the rules needed to build the specified targets correctly and as quickly as possible. Because we want maximum runtime performance, you need to be running a rule on each worker thread whenever possible. Threads should not stay idle when there are rules that are available for execution. A rule is defined as available when all of its dependencies have been satisfied and it is not already satisfied (see “Satisfy the rules”).</p>
+<p>There are two important parallelism requirements:</p>
+<ul>
+  <li>You should NOT run any rule unless its dependencies have been satisfied (all dependent rules have been run and none have failed; see the previous section)</li>
+  <li>If a thread is available (not doing useful work), and there is at least one rule that is available to be executed, the available thread should work on executing that rule.</li>
+</ul>
+<p>The exact type of work that your worker threads perform will generally depend on your implementation. But for the purposes of this MP, you <em>must</em> parallelize the actual execution of commands. If any rule is ready to have its commands executed, a worker thread should do so as soon as possible (i.e. within several milliseconds) unless all worker threads are already executing commands.</p>
+<p>If a rule is available because all its dependencies have been satisfied, and some of your threads are still not executing any rules, then you probably haven’t achieved maximum parallelization.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="example" class="title-text">Example<a class="anchor title-text" href="#example">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Suppose we have <code class="highlighter-rouge">makefile</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a: b c
+    echo A
+b: c
+    echo B
+c:
+    echo C
+</code></pre></div></div>
+<p>Running <code class="highlighter-rouge">./parmake</code> should output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C
+B
+A
+</code></pre></div></div>
+<p>There are many more examples provided in your MP folder.</p>
+<h3 id="notes" class="title-text">Notes</h3>
+<ul>
+  <li>Only make changes in <code class="highlighter-rouge">parmake.c</code>.</li>
+  <li>You will receive 0 points if your implementation uses <code class="highlighter-rouge">sleep()</code>, <code class="highlighter-rouge">usleep()</code>, or any other form of timed waiting (e.g. <code class="highlighter-rouge">sem_timedwait()</code>).</li>
+  <li>For full points, avoid busy-waiting. i.e. threads should not be burning CPU when they aren’t doing useful work.</li>
+  <li>You must only ever launch <code class="highlighter-rouge">T+1</code> threads, where <code class="highlighter-rouge">T</code> is the number of worker threads (+1 comes from the main thread). Do not keep re-spawning new threads for every rule.</li>
+  <li>We will try to artificially create spurious wakeups, so think about how you would resolve those.</li>
+  <li>To achieve a perfect score, you should maximize parallelization by ensuring that every given rule that can be run at a given time is being run.</li>
+  <li>Because rules should be run as soon as they are available, there will sometimes be a well-defined, optimal order of rule execution when multiple threads are used. Think about why that might be the case.</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="compiling-and-running" class="title-text">Compiling and Running<a class="anchor title-text" href="#compiling-and-running">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>As usual, we have provided you with a Makefile which will compile your code in a variety of ways.
+Unfortunately, you can’t use <code class="highlighter-rouge">parmake</code> to compile <code class="highlighter-rouge">parmake</code>, because our parser does not support variables and variable expansions.</p>
+<p>To compile in release mode, run <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code>, for debug mode, use <code class="highlighter-rouge">make debug.</code></p>
+<h3 id="threadsanitizer" class="title-text">ThreadSanitizer</h3>
+<p>The provided <code class="highlighter-rouge">Makefile</code> also builds a ThreadSanitizer instrumented version of your code.
+The tsan executable is <code class="highlighter-rouge">parmake-tsan</code>.
+You can run this (instead of <code class="highlighter-rouge">parmake</code>) to use the ThreadSanitizer race condition detection tool with parmake.
+For a tsan example, see <a href="https://clang.llvm.org/docs/ThreadSanitizer.html" class="fancy-link wiki-link">the tsan docs</a></p>
+<p><strong>We will be using ThreadSanitizer to grade your code! If the autograder detects a data race, you won’t automatically get 0 points, but a few points will be deducted.</strong></p>
+<h3 id="almost-a-reference-implementation" class="title-text">(Almost) a reference implementation</h3>
+<p>You can use the real GNU <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> to check your implementation. However, it differs from <code class="highlighter-rouge">parmake</code> in certain substantive aspects that may or may not be resolved. Here is a partial list of differences:</p>
+<ul>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> usually prints every command it runs. Run <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> with the flag <code class="highlighter-rouge">-s</code> (for silent) to suppress these.</li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> deals with cycles differently than <code class="highlighter-rouge">parmake</code>, so do not use <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> as a reference for cycle handling.</li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> kills the program immediately after a rule fails. Run <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> with the flag <code class="highlighter-rouge">-k</code> (for keep going) to continue satisfying rules that aren’t doomed to fail.</li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> requires every dependency to either be explicitly declared in the Makefile or present as a file on the disk. To get <code class="highlighter-rouge">parmake</code> and <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> to work the same way, define every rule explicitly.</li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> spits out error messages when commands fail, even when the flag <code class="highlighter-rouge">-k</code> is used. <code class="highlighter-rouge">parmake</code> will not do this.</li>
+</ul>
+<p>Example “good” Makefile:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#testfile
+
+a: maybefile b c 
+	echo "a"
+b:
+	cat / # always fails
+	echo "I should not print out."
+c:
+	echo "c"
+maybefile:
+</code></pre></div></div>
+<p>Example commands:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    $ ./parmake -f testfile -j 2
+</code></pre></div></div>
+<p>This should generate the same output as:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    $ make -s -k -f testfile -j 2
+</code></pre></div></div>
+<p>except maybe for some printouts that <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> emits when ‘b’ fails. Remember that you don’t need to implement any GNU Make features that aren’t prescribed in these docs.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="grading" class="title-text">Grading<a class="anchor title-text" href="#grading">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Here is the grading breakdown:</p>
+<ul>
+  <li>Part 1 (50%): Create a single-threaded version of <code class="highlighter-rouge">parmake</code> (so just <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code>). This version should:
+    <ul>
+      <li>identify cycles in the dependency graph returned by the parser and remove goal rules that depend on them</li>
+      <li>attempt to run all other goal rules by running all their descendants (i.e. implicit dependencies) and <em>only</em> their descendants</li>
+      <li>identify whether or not to run a rule as per the flowchart recipe and run it once possible (or reject it if not possible)</li>
+    </ul>
+  </li>
+  <li>Part 2 (50%): Create the full multi-threaded version of <code class="highlighter-rouge">parmake</code> (so <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/par" class="fancy-link">par</a></code>). This version should:
+    <ul>
+      <li>perform the same functions as in Part 1</li>
+      <li>run with 2-4 threads (excluding the main thread) for any given Makefile</li>
+      <li>concurrently run all rules whose dependencies have been satisfied, subject to the thread limit</li>
+      <li>avoid deadlock, data races, livelock, and busy-waiting</li>
+      <li>create performant code that doesn’t incur excessive overhead (e.g &gt; 10 ms per rule)</li>
+    </ul>
+  </li>
+</ul>
+</div></div></div>
+</div></div>
+</div>
+          
+          <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_docs/parallel_make.md";
+  </script>
+  <!-- Mathjax takes a while to load so do a lazy load to so we can get accessibility -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" crossorigin="anonymous"></script>
+
+<!-- Bring in JQuery and Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<footer class="">
+
+<!-- Add another container at the bottom so there is some space there -->
+<div class="container-fluid">
+<div class="shadow"></div>
+
+</div>
+
+</footer>
+
+</body>
+
+<!-- Mirrored from cs241.cs.illinois.edu/assignments/parallel_make.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:32:37 GMT -->
+</html>

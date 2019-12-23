@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from cs241.cs.illinois.edu/coursebook/Scheduling by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:37:32 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="utf-8">
+
+  <!-- If for some reason you are using IE, use edge -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- So bootstrap isn't horrible, set the width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="../images/favicons/manifest.json">
+  <link rel="mask-icon" href="../images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>CS 241 · Scheduling</title>
+
+  <!-- Reference a CDN so this is properly cached in the browser forever. Unless they clean out the
+       Cache this will incur no load time. Ideally we should put a security checksum but that breaks
+       Firefox development sometimes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <!-- Asynchronously load the code style sheet because we want everything loaded as fast as possible
+       Also tag with ?v=time to bust the cache of any browser so updates appear -->
+  <style rel="stylesheet" type="text/css">.highlight table td{padding:5px}.highlight table pre{margin:0}.highlight,.highlight .w{color:#93a1a1;background-color:#002b36}.highlight .err{color:#002b36;background-color:#dc322f}.highlight .c,.highlight .cd,.highlight .cm,.highlight .c1,.highlight .cs{color:#657b83}.highlight .cp{color:#b58900}.highlight .nt{color:#b58900}.highlight .o,.highlight .ow{color:#93a1a1}.highlight .p,.highlight .pi{color:#93a1a1}.highlight .gi{color:#859900}.highlight .gd{color:#dc322f}.highlight .gh{color:#268bd2;background-color:#002b36;font-weight:bold}.highlight .k,.highlight .kn,.highlight .kp,.highlight .kr,.highlight .kv{color:#6c71c4}.highlight .kc{color:#cb4b16}.highlight .kt{color:#cb4b16}.highlight .kd{color:#cb4b16}.highlight .s,.highlight .sb,.highlight .sc,.highlight .sd,.highlight .s2,.highlight .sh,.highlight .sx,.highlight .s1{color:#859900}.highlight .sr{color:#2aa198}.highlight .si{color:#d33682}.highlight .se{color:#d33682}.highlight .nn{color:#b58900}.highlight .nc{color:#b58900}.highlight .no{color:#b58900}.highlight .na{color:#268bd2}.highlight .m,.highlight .mf,.highlight .mh,.highlight .mi,.highlight .il,.highlight .mo,.highlight .mb,.highlight .mx{color:#859900}.highlight .ss{color:#859900}
+/*# sourceMappingURL=/assets/source-maps/code-style.css.map */
+/*# sourceURL=css/code-style.css */
+</style>
+  <style rel="stylesheet" type="text/css">:root{--color-primary: hsl(207, 59%, 43%);--color-secondary: hsl(207, 70%, 53%);--color-emphasis: hsl(204, 100%, 42%);--color-text: hsl(0, 0%, 0%);--color-translucent: hsla(0, 0%, 0%, 0.3);--color-pale-white: hsla(240, 8%, 95%)}body{padding-top:50px;font-family:Roboto, Helvetica, Arial, sans-serif;background-color:var(--color-pale-white);color:var(--color-text);padding-bottom:50px}@media (min-width: 768px) and (max-width: 991px){body{padding-top:100px}}.navbar{background-color:var(--color-primary);border-color:var(--color-secondary);border:0px;border-top:none;box-shadow:none;margin-bottom:0}.navbar-default .navbar-brand{color:var(--color-pale-white) !important;font-weight:bold}.navbar-default .navbar-nav>li>a{color:var(--color-pale-white) !important}.navbar-collapse{border-top:0px !important;box-shadow:none}.navbar-brand:hover{color:var(--color-navbar-text) !important}.github-link{display:inline-block;vertical-align:middle;margin-left:0.5em;text-indent:-9999px;width:32px;height:32px;background-image:url(NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjMTgxNjE2IiBkPSJNMzIuNiwzLjRDMTYuMywzLjQsMywxNi43LDMsMzMuMWMwLDEzLjEsOC41LDI0LjIsMjAuMywyOC4xDQoJYzEuNSwwLjMsMi0wLjYsMi0xLjRjMC0wLjcsMC0yLjYsMC01Yy04LjIsMS44LTEwLTQtMTAtNGMtMS4zLTMuNC0zLjMtNC4zLTMuMy00LjNjLTIuNy0xLjgsMC4yLTEuOCwwLjItMS44YzMsMC4yLDQuNSwzLjEsNC41LDMuMQ0KCWMyLjYsNC41LDYuOSwzLjIsOC42LDIuNWMwLjMtMS45LDEtMy4yLDEuOS00Yy02LjYtMC43LTEzLjUtMy4zLTEzLjUtMTQuNmMwLTMuMiwxLjItNS45LDMtNy45Yy0wLjMtMC43LTEuMy0zLjgsMC4zLTcuOA0KCWMwLDAsMi41LTAuOCw4LjEsM2MyLjQtMC43LDQuOS0xLDcuNC0xYzIuNSwwLDUsMC4zLDcuNCwxYzUuNy0zLjgsOC4xLTMsOC4xLTNjMS42LDQuMSwwLjYsNy4xLDAuMyw3LjhjMS45LDIuMSwzLDQuNywzLDcuOQ0KCWMwLDExLjQtNi45LDEzLjktMTMuNSwxNC42YzEuMSwwLjksMiwyLjcsMiw1LjVjMCw0LDAsNy4yLDAsOC4xYzAsMC44LDAuNSwxLjcsMiwxLjRjMTEuOC0zLjksMjAuMi0xNSwyMC4yLTI4LjENCglDNjIuMiwxNi43LDQ5LDMuNCwzMi42LDMuNHoiLz4NCjwvc3ZnPg0K)}h1{padding-bottom:20px;font-size:48px}h2{padding-top:50px;margin-top:-20px}.navbar-nav,.navbar-nav>ul{margin:0}@media (max-width: 767px){h1{font-size:36px}h2{font-size:22px}p,li{font-size:12px}}.popover{background-color:black;color:black;display:block}.popover-title{background-color:black;color:black;font-size:12px;text-align:center;border-bottom:0px}.popover-title a{color:white;cursor:pointer}.popover-content{background-color:black;padding:0px}.popover.top>.arrow:after{border-top-color:black}table{width:100%}.anchor{display:none;padding-left:5px}.title-text:hover>.anchor{display:inline}.day{height:300px;margin-bottom:20px;width:100%;background-color:#fff;border-radius:3px}.day h1{color:#f1f1f3}.day-summary,.day-resources{color:#000}.day-resources{position:absolute;bottom:20px}.day-summary{position:absolute;top:75px}.day-title-text h3{margin:0px}.day-title{padding-top:5px;padding-bottom:5px;border-radius:3px;height:70px}.schedule-container{margin-left:20px;margin-right:20px}ul.toc{list-style:none;padding-left:1em}h1,h2,h3{color:var(--color-secondary)}.announcement-card{background-color:var(--color-pale-white);border-radius:5px}.annoucement-title{margin-top:5px}.day-title-h3{color:var(--color-pale-white)}img:not(.emoji){max-height:80vh;display:inline-block;margin:auto;max-width:100%}.img-paragraph{display:grid}.hidden{display:none !important}.loader,.loader:before,.loader:after{border-radius:50%}.loader{color:var(--color-pale-white);font-size:11px;text-indent:-99999em;margin:55px auto;position:relative;width:10em;height:10em;box-shadow:inset 0 0 0 1em;-webkit-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0)}.loader:before,.loader:after{position:absolute;content:''}.loader:before{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:10.2em 0 0 10.2em;top:-0.1em;left:-0.1em;-webkit-transform-origin:5.2em 5.1em;transform-origin:5.2em 5.1em;-webkit-animation:load2 2s infinite ease 1.5s;animation:load2 2s infinite ease 1.5s}.loader:after{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:0 10.2em 10.2em 0;top:-0.1em;left:5.1em;-webkit-transform-origin:0px 5.1em;transform-origin:0px 5.1em;-webkit-animation:load2 2s infinite ease;animation:load2 2s infinite ease}@-webkit-keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.anchor{text-decoration:none}.anchor:hover{text-decoration:none}.fancy-link{text-decoration:none !important;color:var(--color-emphasis);display:inline-block;position:relative;padding-bottom:0px}.fancy-link:after{content:'';display:block;margin:auto;height:1px;width:0px;background:transparent;transition:width .3s ease, background-color .3s ease}.fancy-link:hover:after{width:100%;background:var(--color-emphasis)}.container-fluid{padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}.navbar-toggle{border-width:0px}.navbar-default .navbar-toggle .icon-bar{background-color:var(--color-pale-white)}.navbar-brand.small{display:none}@media (max-width: 767px){.navbar-brand.normal{display:none}.navbar-brand.small{display:inline-block}}.speaker-wrapper{float:right}.speaker{background-image:url("data:image/png;base64,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");background-size:cover;height:40px;width:40px;margin-top:5px}pre{color:var(--color-pale-white);background-color:var(--color-text);border:inherit}code{color:var(--color-pale-white)}.code-copy{float:right;right:0px;display:none;background-color:var(--color-text);padding:5px 5px 5px 5px;border-radius:3px;cursor:pointer}pre code{display:block}pre:hover>*>.code-copy{display:inline}.code-copy-textarea{position:absolute;left:-9999px;top:-9999px}pre.highlight{margin-bottom:-10px;padding-bottom:0px}.highlighter-rouge{background-color:#DFDFDF;color:#151515;border-radius:5px;padding-top:4px}.highlight{background-color:#151515;border:0px;color:#F2F2F4}div.highlighter-rouge,figure.highlighter-rouge{background-color:#151515;color:#D7D7D7;padding-bottom:1.5em;margin-bottom:0.65em}.fancy-link code{color:#337ab7}.fancy-link:hover code{color:#23527c}.fancy-link:hover:after code{background-color:#337ab7}.table>tbody>tr>td,table>tbody>tr>td,.table>tbody>tr>th,table>tbody>tr>th,.table>tfoot>tr>td,table>tfoot>tr>td,.table>tfoot>tr>th,table>tfoot>tr>th,.table>thead>tr>td,table>thead>tr>td,.table>thead>tr>th,table>thead>tr>th{border-top:0px}.table,table{margin-left:40px;width:75%}.search-icon-div{width:initial;padding-left:10px;background-color:white;height:34px;border-radius:3px 0px 0px 3px}.glyphicon-search{font-size:32px;top:0px;color:#2C72AD}.search{border-radius:0px 3px 3px 0px;border:0px;outline:none;box-shadow:none}.no-gutter>[class*='col-']{padding-right:0;padding-left:0}.result-link{font-size:24px;text-decoration:underline}.result-div{padding-bottom:12px}.highlight-result{background-color:yellow;border-radius:3px;color:black;padding-left:2px;padding-right:2px}tbody tr:nth-child(odd){background-color:#DDD;border-radius:20px}html.hacker,body.hacker,header.hacker,nav.hacker,:not(.card-staff)>*>div:not(.card-staff).hacker,table.hacker,pre.hacker,span.hacker,:not(.card-staff)>a.hacker,p.hacker,h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:white !important;font-family:monospace !important;background-color:black !important}h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:#20C20E !important}ul.hacker{list-style-type:square}pre.hacker{border-color:white;border-radius:0}.toc.hacker{border-left-width:0}.content .highlighter-rouge.hacker{font-weight:bold;background-color:black}.pad.hacker{padding:0}a.hacker{color:#20C20E}tbody tr:nth-child(odd).hacker{background-color:inherit}body.hacker .day,body.hacker .announcement-card{background-color:#151515}body.hacker .announcement{color:white !important}#tuxlink img.hacker{-ms-interpolation-mode:nearest-neighbor;image-rendering:pixelated}.apply-button{border:none;background-color:white;padding:10px 20px 10px 20px;font-size:36px;border-radius:5px;box-shadow:5px 5px gray;margin:10px auto 10px auto;display:block;transition:background-color 0.5s ease}.apply-button:hover{background-color:var(--color-primary)}li.navbar-subitem{float:left;overflow:hidden;width:100%}.navbar-item,.navbar-subitem{color:var(--color-navbar-text);text-align:center;font-family:'Roboto', sans-serif}li.navbar-item:hover,li.navbar-subitem:hover{background-color:white}li.navbar-item:hover>a,li.navbar-subitem:hover>a{color:var(--color-primary) !important}.subitem-container{display:none;position:absolute;min-width:8vw;background-color:var(--color-primary);box-shadow:0px 8px 16px 0px var(--color-translucent);z-index:1;width:100%}.navbar-item:hover .subitem-container{display:block}.staff{width:100%}.flexbox-item div.staff-image{width:18vh;height:18vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.flexbox-item:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-weight:100;padding-top:2vh;color:var(--color-secondary-emphasis)}.heading{text-align:center;font-family:Roboto, Helvetica, sans-serif;font-size:3em;padding:1em;padding:0}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}main{text-align:center;margin:0;padding:0;background-color:white}.card-body{background-color:var(--color-pale-white);padding:2vh;display:block}.card-body.course-heading{background-color:rgba(72,105,255,0.945)}.card-body.card-body.course-heading h1{color:white}.card-body.course-information{background-color:white}h2{font-weight:200}section.flexbox{display:flex;justify-content:center;margin:auto;flex-wrap:wrap;width:90vw}.flexbox-item{display:inline-block;padding:2vh;margin:2vh}img.logo{width:2vw;height:3vw;margin:2vh}@media (max-width: 480px){.flexbox-item div.staff-image{width:18vh;height:18vh}img.logo{width:10vw;height:8vh}.staff-name{font-size:0.75em}}.infrastructure-links{margin:auto;text-align:center;display:block}.gallery{display:flex;justify-content:center;margin:auto;padding:5vw;flex-wrap:wrap;width:100vw}.staff{width:100%}.staff-container{margin:2vh}.staff-container div.staff-image{width:24vh;height:24vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.staff-container:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-size:1.5em;padding-top:1vh;color:var(--color-emphasis)}.heading{text-align:center}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}@media only screen and (max-width: 480px){.staff-container div.staff-image{width:20vh;height:20vh}.staff-name{font-size:1.25em}}.latest-mp{background-color:rgba(16,213,147,0.85)}.latest-lab{background-color:rgba(255,102,42,0.85)}.latest-assignments section.flexbox-item{border-radius:4%}
+/*# sourceMappingURL=/assets/source-maps/main.css.map */
+/*# sourceURL=css/main.css */
+</style>
+
+  <meta property="og:locale" content="en_US">
+  
+  
+  <meta property="og:title" content="Scheduling" />
+  
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="http://cs241.cs.illinois.edu" />
+  
+  
+  <meta property="og:description" content=""Webpage for CS 241: System Programming at the University of Illinois at Urbana-Champaign. All documentation and information about the course can be found here."
+" />
+  
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- Navigation button as html so we don't have to resize images -->
+      <button
+        type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-expanded="false"
+        aria-controls="navbar"
+      >
+        <!-- Hamburger Navigation bar on small -->
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Full title on laptop -->
+      <a class="navbar-brand navbar-item normal" href="../index.html">
+             <span>CS 241: System Programming</span> 
+      </a>
+
+      <!-- Smaller on mobile-->
+      <a class="navbar-brand navbar-item small" href="../index.html">
+          <span>CS 241</span>
+      </a>
+    </div>
+
+    <!-- Finally generate what is in the navbar -->
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        <li class="navbar-item">
+          <a href="../assignments.html">Assignments</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../quiz_topics.html">Quizzes</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../grades.html">Grades</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../schedule.html">Schedule</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../lectures.html">Lectures</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../syllabus.html">Syllabus</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../staff.html">Staff</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../staff_hall_of_fame.html">Staff Hall of Fame</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../resources.html">Resources</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../peer_tutoring.html">Peer Tutoring</a>
+            </li>
+            
+            <li class="navbar-subitem">
+              <a href="index.html">Coursebook</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../honors.html">Honors</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto"
+    rel="stylesheet"
+  />
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            
+            
+            
+            <h1>
+              Scheduling
+
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      
+      <div id="content">
+          <div class="wrapper">
+
+</div>
+          <div class="wrapper">
+<ul>
+  <li>
+<a href="#scheduling" class="fancy-link wiki-link">Scheduling</a>
+    <ul>
+      <li><a href="#high-level-scheduler-overview" class="fancy-link wiki-link">High Level Scheduler Overview</a></li>
+      <li>
+<a href="#measurements" class="fancy-link wiki-link">Measurements</a>
+        <ul>
+          <li><a href="#what-is-preemption" class="fancy-link wiki-link">What is preemption?</a></li>
+          <li><a href="#why-might-a-process-or-thread-be-placed-on-the-ready-queue" class="fancy-link wiki-link">Why might a process (or thread) be placed on the ready
+queue?</a></li>
+        </ul>
+      </li>
+      <li>
+<a href="#measures-of-efficiency" class="fancy-link wiki-link">Measures of Efficiency</a>
+        <ul>
+          <li><a href="#convoy-effect" class="fancy-link wiki-link">Convoy Effect</a></li>
+          <li><a href="#extra-linux-scheduling" class="fancy-link wiki-link">Extra: Linux Scheduling</a></li>
+        </ul>
+      </li>
+      <li>
+<a href="#scheduling-algorithms" class="fancy-link wiki-link">Scheduling Algorithms</a>
+        <ul>
+          <li><a href="#shortest-job-first-sjf" class="fancy-link wiki-link">Shortest Job First (SJF)</a></li>
+          <li><a href="#preemptive-shortest-job-first-psjf" class="fancy-link wiki-link">Preemptive Shortest Job First
+(PSJF)</a></li>
+          <li><a href="#first-come-first-served-fcfs" class="fancy-link wiki-link">First Come First Served
+(FCFS)</a></li>
+          <li><a href="#round-robin-rr" class="fancy-link wiki-link">Round Robin (RR)</a></li>
+          <li><a href="#priority" class="fancy-link wiki-link">Priority</a></li>
+        </ul>
+      </li>
+      <li>
+<a href="#extra-scheduling-conceptually" class="fancy-link wiki-link">Extra: Scheduling Conceptually</a>
+        <ul>
+          <li><a href="#first-come-first-served" class="fancy-link wiki-link">First Come First Served</a></li>
+          <li><a href="#round-robin-or-processor-sharing" class="fancy-link wiki-link">Round Robin or Processor
+Sharing</a></li>
+          <li><a href="#non-preemptive-priority" class="fancy-link wiki-link">Non Preemptive Priority</a></li>
+          <li><a href="#shortest-job-first" class="fancy-link wiki-link">Shortest Job First</a></li>
+          <li><a href="#preemptive-priority" class="fancy-link wiki-link">Preemptive Priority</a></li>
+          <li><a href="#preemptive-shortest-job-first" class="fancy-link wiki-link">Preemptive Shortest Job
+First</a></li>
+        </ul>
+      </li>
+      <li><a href="#topics" class="fancy-link wiki-link">Topics</a></li>
+      <li><a href="#questions" class="fancy-link wiki-link">Questions</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p><span> </span></p>
+
+
+
+<p><strong>I wish that I could fly<br>
+There’s danger if I dare to stop and here’s the reason why<br>
+You see I’m overdue<br>
+I’m in a rabbit stew<br>
+Can’t even say “Good-bye”, hello<br>
+I’m late, I’m late, I’m late<br>
+No, no, no, no, no, no, no!</strong> - <strong>Alice in Wonderland</strong></p>
+
+<p>CPU Scheduling is the problem of efficiently selecting which process to
+run on a system’s CPU cores. In a busy system, there will be more
+ready-to-run processes than there are CPU cores, so the system kernel
+must evaluate which processes should be scheduled to run and which
+processes should be executed later. The system must also decide
+whetherit should take a particular process and pause its execution –
+along with any associated threads. The balance comes from stopping
+processes often enough where you have a responsive computer but
+infrequently enough where the programs themselves are spending minimal
+time context switching. It is a hard balance to get right.</p>
+
+<p>The additional complexity of multi-threaded and multiple CPU cores are
+considered a distraction to this initial exposition so are ignored here.
+Another gotcha for non-native speakers is the dual meaning of “Time”:
+The word “Time” can be used in both clock and elapsed duration context.
+For example “The arrival time of the first process was 9:00am.” and,
+“The running time of the algorithm is 3 seconds”.</p>
+
+<p>One clarification that we will make is that our scheduling will mainly
+deal with short term or CPU scheduling. That means we will assume that
+the processes are in memory and ready to go. The other types of
+scheduling are long and medium term. Long term schedulers act as
+gatekeepers to the processing world. When a process requests another
+process to be executed, it can either tell the process yes, no, or wait.
+The medium term scheduler deals with the caveats of moving a process
+from the paused state in memory to the paused state on disk when there
+are too many processes or some process are known to use an insignificant
+amount of CPU cycles. Think about a process that only checks something
+once an hour.</p>
+
+<div class="pad"><div class="card">
+<div class="title"><h2 id="high-level-scheduler-overview" class="title-text">High Level Scheduler Overview<a class="anchor title-text" href="#high-level-scheduler-overview">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Schedulers are pieces of software programs. In fact, you can implement
+schedulers yourself! If you are given a list of commands to exec, a
+program can schedule them them with SIGSTOP and SIGCONT. These are
+called user space schedulers. Hadoop and python’s celery may do some
+sort of user space scheduling or deal with the operating system.</p>
+<p>At the operating system level, you generally have this type of
+flowchart, described in words first below. Note, please don’t memorize
+all the states.</p>
+<ol>
+  <li>
+    <p>New is the initial state. A process has been requested to schedule.
+All process requests come from fork or clone. At this point the
+operating system knows it needs to create a new process.</p>
+  </li>
+  <li>
+    <p>A process moves from the new state to the ready. This means any
+structs in the kernel are allocated. From there, it can go into
+ready suspended or running.</p>
+  </li>
+  <li>
+    <p>Running is the state that we hope most of our processes are in,
+meaning they are doing useful work. A process could either get
+preempted, blocked, or terminate. Preemption brings the process back
+to the ready state. If a process is blocked, that means it could be
+waiting on a mutex lock, or it could’ve called sleep – either way,
+it willingly gave up control.</p>
+  </li>
+  <li>
+    <p>On the blocked state the operating system can either turn the
+process ready or it can go into a deeper state called blocked
+suspended.</p>
+  </li>
+  <li>
+    <p>There are so-called deep slumber states called blocked suspended and
+blocked ready. You don’t need to worry about these.</p>
+  </li>
+</ol>
+<p>We will try to pick a scheme that decides when a process should move to
+the running state, and when it should be moved back to the ready state.
+We won’t make much mention of how to factor in voluntarily blocked
+states and when to switch to deep slumber states.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="measurements" class="title-text">Measurements<a class="anchor title-text" href="#measurements">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Scheduling affects the performance of the system, specifically the
+<em>latency</em> and <em>throughput</em> of the system. The throughput might be
+measured by a system value, for example, the I/O throughput - the number
+of bits written per second, or the number of small processes that can
+complete per unit time. The latency might be measured by the response
+time – elapse time before a process can start to send a response – or
+wait time or turnaround time –the elapsed time to complete a task.
+Different schedulers offer different optimization trade-offs that may be
+appropriate for desired use. There is no optimal scheduler for all
+possible environments and goals. For example, Shortest Job First will
+minimize total wait time across all jobs but in interactive (UI)
+environments it would be preferable to minimize response time at the
+expense of some throughput, while FCFS seems intuitively fair and easy
+to implement but suffers from the Convoy Effect. Arrival time is the
+time at which a process first arrives at the ready queue, and is ready
+to start executing. If a CPU is idle, the arrival time would also be the
+starting time of execution.</p>
+<h3 id="what-is-preemption" class="title-text">What is preemption?</h3>
+<p>Without preemption, processes will run until they are unable to utilize
+the CPU any further. For example the following conditions would remove a
+process from the CPU and the CPU would be available to be scheduled for
+other processes. The process terminates due to a signal, is blocked
+waiting for concurrency primitive, or exits normally. Thus once a
+process is scheduled it will continue even if another process with a
+high priority appears on the ready queue.</p>
+<p>With preemption, the existing processes may be removed immediately if a
+more preferred process is added to the ready queue. For example, suppose
+at t=0 with a Shortest Job First scheduler there are two processes (P1
+P2) with 10 and 20 ms execution times. P1 is scheduled. P1 immediately
+creates a new process P3, with execution time of 5 ms, which is added to
+the ready queue. Without preemption, P3 will run 10ms later (after P1
+has completed). With preemption, P1 will be immediately evicted from the
+CPU and instead placed back in the ready queue, and P3 will be executed
+instead by the CPU.</p>
+<p>Any scheduler that doesn’t use some form of preemption can result in
+starvation because earlier processes may never be scheduled to run
+(assigned a CPU). For example with SJF, longer jobs may never be
+scheduled if the system continues to have many short jobs to schedule.
+It all depends on the
+<a href="https://en.wikipedia.org/wiki/Scheduling_(computing)#Types_of_operating_system_schedulers" class="fancy-link wiki-link">https://en.wikipedia.org/wiki/Scheduling_(computing)#Types_of_operating_system_schedulers</a>.</p>
+<h3 id="why-might-a-process-or-thread-be-placed-on-the-ready-queue" class="title-text">Why might a process (or thread) be placed on the ready queue?</h3>
+<p>A process is placed on the ready queue when it can use a CPU. Some
+examples include:</p>
+<ul>
+  <li>
+    <p>A process was blocked waiting for a <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/read" class="fancy-link">read</a></code> from storage or socket to
+complete and data is now available.</p>
+  </li>
+  <li>
+    <p>A new process has been created and is ready to start.</p>
+  </li>
+  <li>
+    <p>A process thread was blocked on a synchronization primitive
+(condition variable, semaphore, mutex lock) but is now able to
+continue.</p>
+  </li>
+  <li>
+    <p>A process is blocked waiting for a system call to complete but a
+signal has been delivered and the signal handler needs to run.</p>
+  </li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="measures-of-efficiency" class="title-text">Measures of Efficiency<a class="anchor title-text" href="#measures-of-efficiency">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>First some definitions</p>
+<ol>
+  <li>
+    <p><code class="highlighter-rouge">start_time</code> is the wall-clock start time of the process (CPU starts
+working on it)</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">end_time</code> is the end wall-clock of the process (CPU finishes the
+process)</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">run_time</code> is the total amount of CPU time required</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">arrival_time</code> is the time the process enters the scheduler (CPU may
+start working on it)</p>
+  </li>
+</ol>
+<p>Here are measures of efficiency and their mathematical equations</p>
+<ol>
+  <li>
+    <p><code class="highlighter-rouge">Turnaround Time</code> is the total time from when the process arrives to
+when it ends. <code class="highlighter-rouge">end_time - arrival_time</code></p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">Response Time</code> is the total latency (time) that it takes from when
+the process arrives to when the CPU actually starts working on it.
+<code class="highlighter-rouge">start_time - arrival_time</code></p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">Wait Time</code> is the <em>total</em> wait time or the total time that a
+process is on the ready queue. A common mistake is to believe it is
+only the initial waiting time in the ready queue. If a CPU intensive
+process with no I/O takes 7 minutes of CPU time to complete but
+required 9 minutes of wall-clock time to complete we can conclude
+that it was placed on the ready-queue for 2 minutes. For those 2
+minutes, the process was ready to run but had no CPU assigned. It
+does not matter when the job was waiting, the wait time is 2
+minutes. <code class="highlighter-rouge">end_time - arrival_time - run_time</code></p>
+  </li>
+</ol>
+<h3 id="convoy-effect" class="title-text">Convoy Effect</h3>
+<p>The convoy effect is when a process takes up a lot of the CPU time,
+leaving all other processes with potentially smaller resource needs
+following like a Convoy Behind them.</p>
+<p>Suppose the CPU is currently assigned to a CPU intensive task and there
+is a set of I/O intensive processes that are in the ready queue. These
+processes require a tiny amount of CPU time but they are unable to
+proceed because they are waiting for the CPU-intensive task to be
+removed from the processor. These processes are starved until the CPU
+bound process releases the CPU. But, the CPU will rarely be released.
+For example, in the case of an FCFS scheduler, we must wait until the
+process is blocked due to an I/O request. The I/O intensive process can
+now finally satisfy their CPU needs, which they can do quickly because
+their CPU needs are small and the CPU is assigned back to the
+CPU-intensive process again. Thus the I/O performance of the whole
+system suffers through an indirect effect of starvation of CPU needs of
+all processes.</p>
+<p>This effect is usually discussed in the context of FCFS scheduler;
+however, a Round Robin scheduler can also exhibit the Convoy Effect for
+long time-quanta.</p>
+<h3 id="extra-linux-scheduling" class="title-text">Extra: Linux Scheduling</h3>
+<p>As of February 2016, Linux by default uses the <em>Completely Fair
+Scheduler</em> for CPU scheduling and the Budget Fair Scheduling “BFQ” for
+I/O scheduling. Appropriate scheduling can have a significant impact on
+throughput and latency. Latency is important for interactive and
+soft-real time applications such as audio and video streaming. See the
+discussion and comparative benchmarks
+<a href="https://lkml.org/lkml/2014/5/27/314" class="fancy-link wiki-link">https://lkml.org/lkml/2014/5/27/314</a>
+for more information.</p>
+<p>Here is how the CFS schedules</p>
+<ul>
+  <li>
+    <p>The CPU creates a Red-Black tree with the processes virtual runtime
+(runtime / nice_value) and sleeper fairness flag – if the process
+is waiting on something, give it the CPU when it is done waiting.</p>
+  </li>
+  <li>
+    <p>Nice values are the kernel’s way of giving priority to certain
+processes, the lower nice value the higher priority.</p>
+  </li>
+  <li>
+    <p>The kernel chooses the lowest one based on this metric and schedules
+that process to run next, taking it off the queue. Since the
+red-black tree is self-balancing this operation is guaranteed
+<script type="math/tex">O(log(n))</script> (selecting the min process is the same runtime)</p>
+  </li>
+</ul>
+<p>Although it is called the Fair Scheduler there are a fair bit of
+problems.</p>
+<ul>
+  <li>
+    <p>Groups of processes that are scheduled may have imbalanced loads so
+the scheduler roughly distributes the load. When another CPU gets
+free it can only look at the average load of a group schedule, not
+the individual cores. So the free CPU may not take the work from a
+CPU that is burning so long as the average is fine.</p>
+  </li>
+  <li>
+    <p>If a group of processes is running on non-adjacent cores then there
+is a bug. If the two cores are more than a hop away, the load
+balancing algorithm won’t even consider that core. Meaning if a CPU
+is free and a CPU that is doing more work is more than a hop away,
+it won’t take the work (may have been patched).</p>
+  </li>
+  <li>
+    <p>After a thread goes to sleep on a subset of cores, when it wakes up
+it can only be scheduled on the cores that it was sleeping on. If
+those cores are now busy, the thread will have to wait on them,
+wasting opportunities to use other idle cores.</p>
+  </li>
+  <li>
+    <p>To read more on the problems of the Fair Scheduler, read
+<a href="https://blog.acolyer.org/2016/04/26/the-linux-scheduler-a-decade-of-wasted-cores" class="fancy-link wiki-link">https://blog.acolyer.org/2016/04/26/the-linux-scheduler-a-decade-of-wasted-cores</a>.</p>
+  </li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="scheduling-algorithms" class="title-text">Scheduling Algorithms<a class="anchor title-text" href="#scheduling-algorithms">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Unless otherwise stated</p>
+<ol>
+  <li>
+    <p>Process 1: Runtime 1000ms</p>
+  </li>
+  <li>
+    <p>Process 2: Runtime 2000ms</p>
+  </li>
+  <li>
+    <p>Process 3: Runtime 3000ms</p>
+  </li>
+  <li>
+    <p>Process 4: Runtime 4000ms</p>
+  </li>
+  <li>
+    <p>Process 5: Runtime 5000ms</p>
+  </li>
+</ol>
+<h3 id="shortest-job-first-sjf" class="title-text">Shortest Job First (SJF)</h3>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/scheduling/drawings/sjf.png" alt="Shortest job first
+scheduling"></p>
+<ul>
+  <li>
+    <p>P1 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P2 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P3 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P4 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P5 Arrival: 0ms</p>
+  </li>
+</ul>
+<p>The processes all arrive at the start and the scheduler schedules the
+job with the shortest total CPU time. The glaring problem is that this
+scheduler needs to know how long this program will run over time before
+it ran the program.</p>
+<p>Technical Note: A realistic SJF implementation would not use the total
+execution time of the process but the burst time or the number of CPU
+cycles needed to finish a program. The expected burst time can be
+estimated by using an exponentially decaying weighted rolling average
+based on the previous burst time (Silberschatz, Galvin, and Gagne
+<a href="#ref-silberschatz2005operating" class="fancy-link wiki-link">#ref-silberschatz2005operating</a>
+Chapter 6). For this exposition, we will simplify this discussion to use
+the total running time of the process as a proxy for the burst time.</p>
+<p><strong>Advantages</strong></p>
+<ol>
+  <li>
+    <p>Shorter jobs tend to get run first</p>
+  </li>
+  <li>
+    <p>On average wait times and response times are down</p>
+  </li>
+</ol>
+<p><strong>Disadvantages</strong></p>
+<ol>
+  <li>
+    <p>Needs algorithm to be omniscient</p>
+  </li>
+  <li>
+    <p>Need to estimate the burstiness of a process which is harder than
+let’s say a computer network</p>
+  </li>
+</ol>
+<h3 id="preemptive-shortest-job-first-psjf" class="title-text">Preemptive Shortest Job First (PSJF)</h3>
+<p>Preemptive shortest job first is like shortest job first but if a new
+job comes in with a shorter runtime than the total runtime of the
+current job, it is run instead. If it is equal like our example our
+algorithm can choose. The scheduler uses the <em>total</em> runtime of the
+process. If the scheduler wants to compare the shortest <em>remaining</em> time
+left, that is a variant of PSJF called Shortest Remaining Time First
+(SRTF).</p>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/scheduling/drawings/psjf.png" alt="Preemptive Shortest Job First
+scheduling"></p>
+<ul>
+  <li>
+    <p>P2 at 0ms</p>
+  </li>
+  <li>
+    <p>P1 at 1000ms</p>
+  </li>
+  <li>
+    <p>P5 at 3000ms</p>
+  </li>
+  <li>
+    <p>P4 at 4000ms</p>
+  </li>
+  <li>
+    <p>P3 at 5000ms</p>
+  </li>
+</ul>
+<p>Here’s what our algorithm does. It runs P2 because it is the only thing
+to run. Then P1 comes in at 1000ms, P2 runs for 2000ms, so our scheduler
+preemptively stops P2, and let’s P1 run all the way through. This is
+completely up to the algorithm because the times are equal. Then, P5
+Comes in – since no processes running, the scheduler will run process 5.
+P4 comes in, and since the runtimes are equal P5, the scheduler stops P5
+and runs P4. Finally, P3 comes in, preempts P4, and runs to completion.
+Then P4 runs, then P5 runs.</p>
+<p><strong>Advantages</strong></p>
+<ol>
+  <li>Ensures shorter jobs get run first</li>
+</ol>
+<p><strong>Disadvantages</strong></p>
+<ol>
+  <li>
+    <p>Need to know the runtime again</p>
+  </li>
+  <li>
+    <p>Context switching and jobs can get interrupted</p>
+  </li>
+</ol>
+<h3 id="first-come-first-served-fcfs" class="title-text">First Come First Served (FCFS)</h3>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/scheduling/drawings/fcfs.png" alt="First come first serve
+scheduling"></p>
+<ul>
+  <li>
+    <p>P2 at 0ms</p>
+  </li>
+  <li>
+    <p>P1 at 1000ms</p>
+  </li>
+  <li>
+    <p>P5 at 3000ms</p>
+  </li>
+  <li>
+    <p>P4 at 4000ms</p>
+  </li>
+  <li>
+    <p>P3 at 5000ms</p>
+  </li>
+</ul>
+<p>Processes are scheduled in the order of arrival. One advantage of FCFS
+is that scheduling algorithm is simple The ready queue is a FIFO (first
+in first out) queue. FCFS suffers from the Convoy effect. Here P2
+Arrives, then P1 arrives, then P5, then P4, then P3. You can see the
+convoy effect for P5.</p>
+<p><strong>Advantages</strong></p>
+<ul>
+  <li>
+    <p>Simple algorithm and implementation</p>
+  </li>
+  <li>
+    <p>Context switches infrequent when there are long-running processes</p>
+  </li>
+  <li>
+    <p>No starvation if all processes are guaranteed to terminate</p>
+  </li>
+</ul>
+<p><strong>Disadvantages</strong></p>
+<ul>
+  <li>
+    <p>Simple algorithm and implementation</p>
+  </li>
+  <li>
+    <p>Context switches infrequent when there are long-running processes</p>
+  </li>
+</ul>
+<h3 id="round-robin-rr" class="title-text">Round Robin (RR)</h3>
+<p>Processes are scheduled in order of their arrival in the ready queue.
+After a small time step though, a running process will be forcibly
+removed from the running state and placed back on the ready queue. This
+ensures long-running processes refrain from starving all other processes
+from running. The maximum amount of time that a process can execute
+before being returned to the ready queue is called the time quanta. As
+the time quanta approaches to infinity, Round Robin will be equivalent
+to FCFS.</p>
+<p class="img-paragraph"><img src="https://raw.githubusercontent.com/illinois-cs241/coursebook/master/scheduling/drawings/rr.png" alt="Round Robin
+Scheduling"></p>
+<ul>
+  <li>
+    <p>P1 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P2 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P3 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P4 Arrival: 0ms</p>
+  </li>
+  <li>
+    <p>P5 Arrival: 0ms</p>
+  </li>
+</ul>
+<p>Quantum = 1000ms</p>
+<p>Here all processes arrive at the same time. P1 is run for 1 quantum and
+is finished. P2 for one quantum; then, it is stopped for P3. After all
+other processes run for a quantum we cycle back to P2 until all the
+processes are finished.</p>
+<p><strong>Advantages</strong></p>
+<ol>
+  <li>Ensures some notion of fairness</li>
+</ol>
+<p><strong>Disadvantages</strong></p>
+<ol>
+  <li>Large number of processes = Lots of switching</li>
+</ol>
+<h3 id="priority" class="title-text">Priority</h3>
+<p>Processes are scheduled in the order of priority value. For example, a
+navigation process might be more important to execute than a logging
+process.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="extra-scheduling-conceptually" class="title-text">Extra: Scheduling Conceptually<a class="anchor title-text" href="#extra-scheduling-conceptually">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><strong>This section could be useful for those that like to analyze these
+algorithms mathematically</strong></p>
+<p>If your co-worker asked you what scheduling algorithm to use, you may
+not have the tools to analyze each algorithm. So, let’s think about
+scheduling algorithms at a high level and break them down by their
+times. We will be evaluating this in the context of a random process
+timing, meaning that each process takes a random but finite amount of
+time to finish.</p>
+<p>Just a refresher, here are the
+terms.</p>
+<table class="table">
+  <thead>
+    <tr>
+      <th style="text-align: center">Concept</th>
+      <th style="text-align: center">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Start time</td>
+      <td style="text-align: center">The time the scheduler first started work</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">End time</td>
+      <td style="text-align: center">When the scheduler finished the process</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Arrival time</td>
+      <td style="text-align: center">When the job first arrived at the scheduler</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Run time</td>
+      <td style="text-align: center">How long does the process take to run if there is no preemption</td>
+    </tr>
+  </tbody>
+</table>
+<p>Scheduling Variables</p>
+<p>And here are the measures we are trying to optimize.</p>
+<table class="table">
+  <thead>
+    <tr>
+      <th style="text-align: center">Measure</th>
+      <th style="text-align: center">Formula</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Response Time</td>
+      <td style="text-align: center">Start time minus Arrival time</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Turnaround time</td>
+      <td style="text-align: center">End time minus Arrival time</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Wait time</td>
+      <td style="text-align: center">End time minus Arrival time minus Run time</td>
+    </tr>
+  </tbody>
+</table>
+<p>Scheduling Measures of Efficiency</p>
+<p>Different use cases will be discussed after. Let the maximum amount of
+time that a process run be equal to <script type="math/tex">S</script>. We will also assume that
+there are a finite number of processes running at any given time
+<script type="math/tex">c</script>. Here are some concepts from queueing theory that you’ll need to
+know that will help simplify the theories.</p>
+<ol>
+  <li>
+    <p>Queueing theory involves a random variable controlling the
+interarrival time – or the time between two different processes
+arriving. We won’t name this random variable, but we will assume
+that (1) it has a mean of <script type="math/tex">λ</script> and (2) it is distributed as a
+Poisson random variable. This means the probability of getting a
+process <script type="math/tex">t</script> units after getting another process is
+<script type="math/tex">λ^t * \frac{\exp(-λ)}{t!}</script> where <script type="math/tex">t!</script> can be approximated
+by the gamma function when dealing with real values.</p>
+  </li>
+  <li>
+    <p>We will be denoting the service time <script type="math/tex">S</script>, and deriving the
+waiting time <script type="math/tex">W</script>, and the response time <script type="math/tex">R</script>; more
+specifically the expected values of all of those variables
+<script type="math/tex">E[S]</script> deriving turnaround time is simply <script type="math/tex">S + W</script>. For
+clarity, we will introduce another variable <script type="math/tex">N</script> that is the
+number of people currently in the queue. A famous result in queueing
+theory is Little’s Law which states <script type="math/tex">E[N] = λE[W]</script> meaning that
+the number of people waiting is the arrival rate times the expected
+waiting time (assuming the queue is in a steady state).</p>
+  </li>
+  <li>
+    <p>We won’t make many assumptions about how much time it takes to run
+each process except that it will take a finite amount of time –
+otherwise this gets almost impossible to evaluate. We will denote
+two variables that <script type="math/tex">\frac{1}{μ}</script> is the mean of the waiting time
+and that the coefficient of variation <script type="math/tex">C</script> is defined as
+<script type="math/tex">C^2 = \frac{var(S)}{E[S]^2}</script> to help us control for processes
+that take a while to finish. An important note is that when
+<script type="math/tex">C > 1</script> we say that the running times of the process are
+variadic. We will note below that this rockets up the wait and
+response times for FCFS quadratically.</p>
+  </li>
+  <li>
+    <p><script type="math/tex">% <![CDATA[
+ρ= \frac{λ}{μ} < 1 %]]></script> Otherwise, our queue would become
+infinitely long</p>
+  </li>
+  <li>
+    <p>We will assume that there is one processor. This is known as an
+M/G/1 queue in queueing theory.</p>
+  </li>
+  <li>
+    <p>We’ll leave the service time as an expectation <script type="math/tex">S</script> otherwise we
+may run into over-simplifications with the algebra. Plus it is
+easier to compare different queueing disciplines with a common
+factor of service time.</p>
+  </li>
+</ol>
+<h3 id="first-come-first-served" class="title-text">First Come First Served</h3>
+<p>All results are from Jorma Virtamo’s lectures on the matter (Virtamo,
+<a href="#ref-virtamo" class="fancy-link wiki-link">#ref-virtamo</a>).</p>
+<ol>
+  <li>
+    <p>The first is expected waiting time.
+<script type="math/tex">E[W] = \frac{(1 + C^2)}{2}\frac{ρ}{(1 - ρ)} * E[S]</script></p>
+
+    <p>What does this say? When given as <script type="math/tex">ρ→1</script> or the mean job arrival
+rate equals the mean job processing rate, then the wait times get
+long. Also, as the variance of the job increases, the wait times go
+up.</p>
+  </li>
+  <li>
+    <p>Next is the expected response time</p>
+
+    <p><script type="math/tex">E[R] = E[N] * E[S] = λ* E[W] * E[S]</script> The response time is
+simple to calculate, it is the expected number of people ahead of
+the process in the queue times the expected time to service each of
+those processes. From Little’s Law above, we can substitute that for
+this. Since we already know the value of the waiting time, we can
+reason about the response time as well.</p>
+  </li>
+  <li>
+    <p>A discussion of the results is shows something cool discovered by
+Conway and Al (Conway, Maxwell, and Miller
+<a href="#ref-conway1967theory" class="fancy-link wiki-link">#ref-conway1967theory</a>). Any
+scheduling discipline that isn’t preemptive and doesn’t take into
+account the run time of the process or a priority will have the same
+wait, response, and turnaround time. We will often use this as a
+baseline.</p>
+  </li>
+</ol>
+<h3 id="round-robin-or-processor-sharing" class="title-text">Round Robin or Processor Sharing</h3>
+<p>It is hard to analyze Round Robin from a probabilistic sense because it
+is so state based. The next job that the scheduler schedules requires it
+to remember the previous jobs. Queueing theory developers have made an
+assumption that the time quanta is roughly zero – ignoring context
+switching and the like. This leads way into processor sharing. Many
+different tasks can get worked on at the same time but experience a
+slowdown. All of these proofs will be adapted from Harchol-Balter’s book
+(Harchol-Balter
+<a href="#ref-harchol2013performance" class="fancy-link wiki-link">#ref-harchol2013performance</a>).
+We highly recommend checking out the books if you are interested. The
+proofs are intuitive for people who don’t have a background in queueing
+theory.</p>
+<ol>
+  <li>
+    <p>Before we jump to the answer let’s reason about this. With our
+new-found abstraction, we essentially have an FCFS queue where we
+are going to be working on each job a little slower than before.
+Since we are always working on a job</p>
+
+    <script type="math/tex; mode=display">E[W] = 0</script>
+
+    <p>Under a non-strict analysis of processor sharing though, the number
+of time that the scheduler waits is best approximated by the number
+of times the scheduler need to wait. You’ll need
+<script type="math/tex">\frac{E[S]}{Q}</script> service periods where <script type="math/tex">Q</script> is the quanta,
+and you’ll need about <script type="math/tex">E[N] * Q</script> time in between those periods.
+Leading to an average time of <script type="math/tex">E[W] = E[S] * E[N]</script></p>
+
+    <p>The reason this proof is non-rigorous is that we can’t assume that
+there will always be <script type="math/tex">E[N] * Q</script> time on average in between
+cycles because it depends on the state of the system. This means we
+need to factor in various variations in processing delay. We also
+can’t use Little’s Law in this case because there is no real steady
+state of the system. Otherwise, we’d be able to prove some weird
+things.</p>
+
+    <p>Interestingly, we don’t have to worry about the convoy effect or any
+new processes coming in. The total wait time remains bounded by the
+number of people in the queue. For those of you familiar with tail
+inequalities since processes arrive according to a Poisson
+distribution, the probability that we’ll get many processes drops
+off exponentially due to Chernoff bounds (all arrivals are
+independent of other arrivals). Meaning roughly we can assume low
+variance on the number of processes. As long as the service time is
+reasonable on average, the wait time will be too.</p>
+  </li>
+  <li>
+    <p>The expected response time is <script type="math/tex">E[R] = 0</script></p>
+
+    <p>Under strict processor sharing, it is 0 because all jobs are worked
+on. In practice, the response time is. <script type="math/tex">E[R] = E[N] * Q</script></p>
+
+    <p>Where <script type="math/tex">Q</script> is the quanta. Using Little’s Law again, we can find
+out that <script type="math/tex">E[R] = λE[W] * Q</script></p>
+  </li>
+  <li>
+    <p>A different variable is the amount of service time let the service
+time for processor sharing be defined as <script type="math/tex">S_{PS}</script>. The slowdown
+is <script type="math/tex">E[S_{PS}] = \frac{E[S]}{1 - ρ}</script> Which means as the mean
+arrival rate equals the mean processing time, then the jobs will
+take asymptotically as long to finish. In the non-strict analysis of
+processor sharing, we assume that
+<script type="math/tex">E[S_{RR}] = E[S] + Q * ϵ, ϵ> 0</script> <script type="math/tex">ϵ</script> is the amount of time
+a context switch takes.</p>
+  </li>
+  <li>
+    <p>That naturally leads to the comparison, what is better? The response
+time is roughly the same comparing the non-strict versions, the wait
+time is roughly the same, but notice that nothing about the
+variation of the jobs is put in. That’s because RR doesn’t have to
+deal with the convoy effect and any variances associated, otherwise
+FCFS is faster in a strict sense. It also takes more time for the
+jobs to finish, but the overall turnaround time is lower under high
+variance loads.</p>
+  </li>
+</ol>
+<h3 id="non-preemptive-priority" class="title-text">Non Preemptive Priority</h3>
+<p>We will introduce the notation that there are <script type="math/tex">k</script> different
+priorities and <script type="math/tex">ρ_i > 0</script> is the average load contribution for
+priority <script type="math/tex">i</script> We are constrained by
+<script type="math/tex">\sum\limits_{i=0}^k ρ_i = ρ</script>. We will also denote
+<script type="math/tex">ρ(x) = \sum\limits_{i=0}^x ρ_i</script> which is the load contribution for
+all higher and similar priority processes to <script type="math/tex">x</script>. The last bit of
+notation is that we will assume that the probability of getting a
+process of priority <script type="math/tex">i</script> is <script type="math/tex">p_i</script> and naturally
+<script type="math/tex">\sum\limits_{j=0}^k p_j = 1</script></p>
+<ol>
+  <li>
+    <p>If <script type="math/tex">E[W_i]</script> is the wait time for priority <script type="math/tex">i</script>,
+<script type="math/tex">E[W_x] = \frac{(1 + C)}{2}\frac{ρ}{(1 - ρ(x))*( 1 - ρ(x-1))} * E[S_i]</script>
+The full derivation is as always in the book. A more useful
+inequality is that.</p>
+
+    <p><script type="math/tex">E[W_x] ≤\frac{1 + C}{2}* \frac{ρ}{(1 - ρ(x))^2} * E[S_i]</script>
+because the addition of <script type="math/tex">ρ_x</script> can only increase the sum,
+decrease the denominator or increase the overall function. This
+means that if one is priority 0, then a process only need to wait
+for the other P0 processes which there should be <script type="math/tex">ρC/ (1 - ρ_0)</script>
+P0 processes arrived before to process in FCFS order. Then the next
+priority has to wait for all the others and so on and so forth.</p>
+
+    <p>The expected overall wait time is now</p>
+
+    <script type="math/tex; mode=display">E[W] = \sum\limits_{i=0}^k E[W_i] * p_i</script>
+
+    <p>Now that we have notational soup, let’s factor out the important
+terms.</p>
+
+    <script type="math/tex; mode=display">\sum\limits_{i=0}^k \frac{p_i}{(1-ρ(i))^2}</script>
+
+    <p>Which we compare with FCFS’ model of</p>
+
+    <script type="math/tex; mode=display">\frac{1}{1-ρ}</script>
+
+    <p>In words – you can work this out with experimenting distributions –
+if the system has a lot of low priority processes who don’t
+contribute a lot to the average load, your average wait time becomes
+much lower.</p>
+  </li>
+  <li>
+    <p>The average per process response time is</p>
+
+    <script type="math/tex; mode=display">E[R_i] = \sum\limits_{j = 0}^i E[N_j] * E[S_j]</script>
+
+    <p>Which says that the scheduler needs to wait for all jobs with a
+higher priority and the same to go before a process can go. Imagine
+a series of FCFS queues that a process needs to wait your turn.
+Using Little’s Law for different colored jobs and the formula above
+we can simplify this</p>
+
+    <script type="math/tex; mode=display">E[R_i] = \sum\limits_{j=0}^i λ_j E[W_j] * E[S_j]</script>
+
+    <p>And we can find the average response time by looking at the
+distribution of
+jobs</p>
+
+    <script type="math/tex; mode=display">E[R] = \sum\limits_{i=0}^k p_i [\sum\limits_{j=0}^k λ_j E[W_j] * E[S_j] ]</script>
+
+    <p>Meaning that we are tied to wait times and service times of all
+other processes. If we break down this equation, we see again if we
+have a lot of high priority jobs that don’t contribute a lot to the
+load then our entire sum goes down. We won’t make too many
+assumptions about the service time for a job because that would
+interfere with our analysis from FCFS where we left it as an
+expression.</p>
+  </li>
+  <li>
+    <p>As for a comparison with FCFS in the average case, it usually does
+better assuming that we have a smooth probability distribution –
+i.e. the probability of getting any particular priority is zero. In
+all of our formulas, we still have some probability mass to put on
+lower priority processes, bringing the expectation down. This
+statement doesn’t hold for all smooth distributions but for most
+real-world smoothed distributions (which tend to be smooth) they do.</p>
+  </li>
+  <li>
+    <p>This isn’t even to mention the idea of utility. Utility means that
+if we gain an amount of happiness by having certain jobs finish,
+priority and preemptive priority maximize that while balancing out
+other measures of efficiency.</p>
+  </li>
+</ol>
+<h3 id="shortest-job-first" class="title-text">Shortest Job First</h3>
+<p>This is a wonderful reduction to priority. Instead of having discrete
+priorities, we’ll introduce a process that takes <script type="math/tex">S_t</script> time to get
+serviced. <script type="math/tex">T</script> is the maximum amount of time a process can run for,
+our processes cannot run infinitely long. That means the following
+definitions hold, overriding the previous definitions in priority</p>
+<ol>
+  <li>
+    <p>Let <script type="math/tex">ρ(x) = \int_0^x ρ_u du</script> Be the average load contribution up
+to this point.</p>
+  </li>
+  <li>
+    <p><script type="math/tex">\int_0^k p_u du = 1</script> Probability constraint.</p>
+  </li>
+  <li>
+    <p>Etc, replace all the summations above with integrals</p>
+  </li>
+  <li>
+    <p>The only notational difference is we don’t have to make any
+assumptions about the service times of the jobs because they are
+denoted by service times subscript, all other analyses are the same.</p>
+  </li>
+  <li>
+    <p>This means if you want low wait times on average compared to FCFS,
+your distribution needs to be right-skewed.</p>
+  </li>
+</ol>
+<h3 id="preemptive-priority" class="title-text">Preemptive Priority</h3>
+<p>We will describe priority and SJF’s preemptive version in the same
+section because it is essentially the same as we’ve shown above. We’ll
+use the same notation as before. We will also introduce an additional
+term <script type="math/tex">C_i</script> which denotes the variation among a particular class</p>
+<script type="math/tex; mode=display">C_i = \frac{var(S_i)}{E[S_i]}</script><ol>
+  <li>
+    <p>Response Time. Just a head’s up, this isn’t going to be pretty.
+<script type="math/tex">E[R_i] = \frac{\sum\limits_{j=0}^i\frac{(1 + C_j)}{2}}{(1 - ρ(x))*( 1 - ρ(x-1))} * E[S_i]</script></p>
+
+    <p>If this looks familiar it should. This is the average wait time in
+the nonpreemptive case with a small change. Instead of using the
+variance of the entire distribution, we are looking at the variance
+of each job coming in. The whole response times are</p>
+
+    <script type="math/tex; mode=display">E[R] = \sum\limits_{i = 0}^k p_i * E[R_i]</script>
+
+    <p>If lower priorities jobs come in at a higher service time variance,
+that means our average response times could go down, unless they
+make up most of the jobs that come in. Think of the extreme cases.
+If 99% of the jobs are high priority and the rest make up the other
+percent, then the other jobs will get frequently interrupted, but
+high priority jobs will make up most of the jobs, so the expectation
+is still low. The other extreme is if one percent of jobs are high
+priority and they come in a low variance. That means the chances the
+system getting a high priority jobs that will take a long time is
+low, thus making our response times lower on average. We only run
+into trouble if high priority jobs make up a non-negligible amount,
+and they have a high variance in service times. This brings down
+response times as well as wait times.</p>
+  </li>
+  <li>
+    <p>Waiting Time <script type="math/tex">E[W_i] = E[R_i] + \frac{E[S_i]}{1 - ρ(i)}</script></p>
+
+    <p>Taking the expectation among all processes we
+get</p>
+
+    <script type="math/tex; mode=display">E[W] = \sum\limits_{i = 0}^k p_i (E[R_i] + \frac{E[S_i]}{1 - ρ(i)})</script>
+
+    <p>We can simplify to</p>
+
+    <script type="math/tex; mode=display">E[W] = E[R] + \sum\limits_{i=0}^k \frac{E[S_i]p_i}{(1 - ρ(i))}</script>
+
+    <p>We incur the same cost on response time and then we have to suffer
+an additional cost based on what the probabilities are of lower
+priority jobs coming in and taking this job out. That is what we
+call the average interruption time. This follows the same laws as
+before. Since we have a variadic, pyramid summation if we have a lot
+of jobs with small service times then the wait time goes down for
+both additive pieces. It can be analytically shown that this is
+better given certain probability distributions. For example, try
+with the uniform versus FCFS or the non preemptive version. What
+happens? As always the proof is left to the reader.</p>
+  </li>
+  <li>
+    <p>Turnaround Time is the same formula <script type="math/tex">E[T] = E[S] + E[W]</script>. This
+means that given a distribution of jobs that has either low waiting
+time as described above, we will get low turnaround time – we can’t
+control the distribution of service times.</p>
+  </li>
+</ol>
+<h3 id="preemptive-shortest-job-first" class="title-text">Preemptive Shortest Job First</h3>
+<p>Unfortunately, we can’t use the same trick as before because an
+infinitesimal point doesn’t have a controlled variance. Imagine the
+comparisons though as the same as the previous section.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="topics" class="title-text">Topics<a class="anchor title-text" href="#topics">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><ul>
+  <li>
+    <p>Scheduling Algorithms</p>
+  </li>
+  <li>
+    <p>Measures of Efficiency</p>
+  </li>
+</ul></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="questions" class="title-text">Questions<a class="anchor title-text" href="#questions">#</a>
+</h2></div>
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<ul>
+  <li>
+    <p>What is scheduling?</p>
+  </li>
+  <li>
+    <p>What is queueing? What are some different queueing methods?</p>
+  </li>
+  <li>
+    <p>What is Turnaround Time? Response Time? Wait Time?</p>
+  </li>
+  <li>
+    <p>What is the convoy effect?</p>
+  </li>
+  <li>
+    <p>Which algorithms have the best turnaround/response/wait time on
+average?</p>
+  </li>
+  <li>
+    <p>Do preemptive algorithms do better on average response time compared
+to non preemptive? How about turnaround/wait time?</p>
+  </li>
+</ul>
+<div id="refs" class="references">
+
+<div id="ref-conway1967theory">
+
+Conway, R.W., W.L. Maxwell, and L.W. Miller. 1967. *Theory of
+Scheduling*. Addison-Wesley Pub. Co.
+<a href="https://books.google.com/books?id=CSozAAAAMAAJ" class="fancy-link wiki-link">https://books.google.com/books?id=CSozAAAAMAAJ</a>.
+
+</div>
+
+<div id="ref-harchol2013performance">
+
+Harchol-Balter, M. 2013. *Performance Modeling and Design of Computer
+Systems: Queueing Theory in Action*. Performance Modeling and Design of
+Computer Systems: Queueing Theory in Action. Cambridge University Press.
+<a href="https://books.google.com/books?id=75SbigDGK0kC" class="fancy-link wiki-link">https://books.google.com/books?id=75SbigDGK0kC</a>.
+
+</div>
+
+<div id="ref-silberschatz2005operating">
+
+Silberschatz, A., P.B. Galvin, and G. Gagne. 2005. *Operating System
+Concepts*. Wiley.
+<a href="https://books.google.com/books?id=FH8fAQAAIAAJ" class="fancy-link wiki-link">https://books.google.com/books?id=FH8fAQAAIAAJ</a>.
+
+</div>
+
+<div id="ref-virtamo">
+
+Virtamo, Jorma. n.d. “38.3143 Queueing Theory / Them/G/1/Queue.”
+*38.3143 Queueing Theory / TheM/G/1/Queue*. Aalto University.
+<a href="https://www.netlab.tkk.fi/opetus/s383143/kalvot/E_mg1jono.pdf" class="fancy-link wiki-link">https://www.netlab.tkk.fi/opetus/s383143/kalvot/E_mg1jono.pdf</a>.
+
+</div>
+
+</div>
+</div></div></div>
+</div></div>
+</div>
+          
+          <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_coursebook/Scheduling.md";
+  </script>
+  <!-- Mathjax takes a while to load so do a lazy load to so we can get accessibility -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" crossorigin="anonymous"></script>
+
+<!-- Bring in JQuery and Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<footer class="">
+
+<!-- Add another container at the bottom so there is some space there -->
+<div class="container-fluid">
+<div class="shadow"></div>
+
+</div>
+
+</footer>
+
+</body>
+
+<!-- Mirrored from cs241.cs.illinois.edu/coursebook/Scheduling by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:37:32 GMT -->
+</html>

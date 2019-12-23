@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from cs241.cs.illinois.edu/coursebook/Security by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:37:28 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="utf-8">
+
+  <!-- If for some reason you are using IE, use edge -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- So bootstrap isn't horrible, set the width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="../images/favicons/manifest.json">
+  <link rel="mask-icon" href="../images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>CS 241 · Security</title>
+
+  <!-- Reference a CDN so this is properly cached in the browser forever. Unless they clean out the
+       Cache this will incur no load time. Ideally we should put a security checksum but that breaks
+       Firefox development sometimes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <!-- Asynchronously load the code style sheet because we want everything loaded as fast as possible
+       Also tag with ?v=time to bust the cache of any browser so updates appear -->
+  <style rel="stylesheet" type="text/css">.highlight table td{padding:5px}.highlight table pre{margin:0}.highlight,.highlight .w{color:#93a1a1;background-color:#002b36}.highlight .err{color:#002b36;background-color:#dc322f}.highlight .c,.highlight .cd,.highlight .cm,.highlight .c1,.highlight .cs{color:#657b83}.highlight .cp{color:#b58900}.highlight .nt{color:#b58900}.highlight .o,.highlight .ow{color:#93a1a1}.highlight .p,.highlight .pi{color:#93a1a1}.highlight .gi{color:#859900}.highlight .gd{color:#dc322f}.highlight .gh{color:#268bd2;background-color:#002b36;font-weight:bold}.highlight .k,.highlight .kn,.highlight .kp,.highlight .kr,.highlight .kv{color:#6c71c4}.highlight .kc{color:#cb4b16}.highlight .kt{color:#cb4b16}.highlight .kd{color:#cb4b16}.highlight .s,.highlight .sb,.highlight .sc,.highlight .sd,.highlight .s2,.highlight .sh,.highlight .sx,.highlight .s1{color:#859900}.highlight .sr{color:#2aa198}.highlight .si{color:#d33682}.highlight .se{color:#d33682}.highlight .nn{color:#b58900}.highlight .nc{color:#b58900}.highlight .no{color:#b58900}.highlight .na{color:#268bd2}.highlight .m,.highlight .mf,.highlight .mh,.highlight .mi,.highlight .il,.highlight .mo,.highlight .mb,.highlight .mx{color:#859900}.highlight .ss{color:#859900}
+/*# sourceMappingURL=/assets/source-maps/code-style.css.map */
+/*# sourceURL=css/code-style.css */
+</style>
+  <style rel="stylesheet" type="text/css">:root{--color-primary: hsl(207, 59%, 43%);--color-secondary: hsl(207, 70%, 53%);--color-emphasis: hsl(204, 100%, 42%);--color-text: hsl(0, 0%, 0%);--color-translucent: hsla(0, 0%, 0%, 0.3);--color-pale-white: hsla(240, 8%, 95%)}body{padding-top:50px;font-family:Roboto, Helvetica, Arial, sans-serif;background-color:var(--color-pale-white);color:var(--color-text);padding-bottom:50px}@media (min-width: 768px) and (max-width: 991px){body{padding-top:100px}}.navbar{background-color:var(--color-primary);border-color:var(--color-secondary);border:0px;border-top:none;box-shadow:none;margin-bottom:0}.navbar-default .navbar-brand{color:var(--color-pale-white) !important;font-weight:bold}.navbar-default .navbar-nav>li>a{color:var(--color-pale-white) !important}.navbar-collapse{border-top:0px !important;box-shadow:none}.navbar-brand:hover{color:var(--color-navbar-text) !important}.github-link{display:inline-block;vertical-align:middle;margin-left:0.5em;text-indent:-9999px;width:32px;height:32px;background-image:url(NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjMTgxNjE2IiBkPSJNMzIuNiwzLjRDMTYuMywzLjQsMywxNi43LDMsMzMuMWMwLDEzLjEsOC41LDI0LjIsMjAuMywyOC4xDQoJYzEuNSwwLjMsMi0wLjYsMi0xLjRjMC0wLjcsMC0yLjYsMC01Yy04LjIsMS44LTEwLTQtMTAtNGMtMS4zLTMuNC0zLjMtNC4zLTMuMy00LjNjLTIuNy0xLjgsMC4yLTEuOCwwLjItMS44YzMsMC4yLDQuNSwzLjEsNC41LDMuMQ0KCWMyLjYsNC41LDYuOSwzLjIsOC42LDIuNWMwLjMtMS45LDEtMy4yLDEuOS00Yy02LjYtMC43LTEzLjUtMy4zLTEzLjUtMTQuNmMwLTMuMiwxLjItNS45LDMtNy45Yy0wLjMtMC43LTEuMy0zLjgsMC4zLTcuOA0KCWMwLDAsMi41LTAuOCw4LjEsM2MyLjQtMC43LDQuOS0xLDcuNC0xYzIuNSwwLDUsMC4zLDcuNCwxYzUuNy0zLjgsOC4xLTMsOC4xLTNjMS42LDQuMSwwLjYsNy4xLDAuMyw3LjhjMS45LDIuMSwzLDQuNywzLDcuOQ0KCWMwLDExLjQtNi45LDEzLjktMTMuNSwxNC42YzEuMSwwLjksMiwyLjcsMiw1LjVjMCw0LDAsNy4yLDAsOC4xYzAsMC44LDAuNSwxLjcsMiwxLjRjMTEuOC0zLjksMjAuMi0xNSwyMC4yLTI4LjENCglDNjIuMiwxNi43LDQ5LDMuNCwzMi42LDMuNHoiLz4NCjwvc3ZnPg0K)}h1{padding-bottom:20px;font-size:48px}h2{padding-top:50px;margin-top:-20px}.navbar-nav,.navbar-nav>ul{margin:0}@media (max-width: 767px){h1{font-size:36px}h2{font-size:22px}p,li{font-size:12px}}.popover{background-color:black;color:black;display:block}.popover-title{background-color:black;color:black;font-size:12px;text-align:center;border-bottom:0px}.popover-title a{color:white;cursor:pointer}.popover-content{background-color:black;padding:0px}.popover.top>.arrow:after{border-top-color:black}table{width:100%}.anchor{display:none;padding-left:5px}.title-text:hover>.anchor{display:inline}.day{height:300px;margin-bottom:20px;width:100%;background-color:#fff;border-radius:3px}.day h1{color:#f1f1f3}.day-summary,.day-resources{color:#000}.day-resources{position:absolute;bottom:20px}.day-summary{position:absolute;top:75px}.day-title-text h3{margin:0px}.day-title{padding-top:5px;padding-bottom:5px;border-radius:3px;height:70px}.schedule-container{margin-left:20px;margin-right:20px}ul.toc{list-style:none;padding-left:1em}h1,h2,h3{color:var(--color-secondary)}.announcement-card{background-color:var(--color-pale-white);border-radius:5px}.annoucement-title{margin-top:5px}.day-title-h3{color:var(--color-pale-white)}img:not(.emoji){max-height:80vh;display:inline-block;margin:auto;max-width:100%}.img-paragraph{display:grid}.hidden{display:none !important}.loader,.loader:before,.loader:after{border-radius:50%}.loader{color:var(--color-pale-white);font-size:11px;text-indent:-99999em;margin:55px auto;position:relative;width:10em;height:10em;box-shadow:inset 0 0 0 1em;-webkit-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0)}.loader:before,.loader:after{position:absolute;content:''}.loader:before{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:10.2em 0 0 10.2em;top:-0.1em;left:-0.1em;-webkit-transform-origin:5.2em 5.1em;transform-origin:5.2em 5.1em;-webkit-animation:load2 2s infinite ease 1.5s;animation:load2 2s infinite ease 1.5s}.loader:after{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:0 10.2em 10.2em 0;top:-0.1em;left:5.1em;-webkit-transform-origin:0px 5.1em;transform-origin:0px 5.1em;-webkit-animation:load2 2s infinite ease;animation:load2 2s infinite ease}@-webkit-keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.anchor{text-decoration:none}.anchor:hover{text-decoration:none}.fancy-link{text-decoration:none !important;color:var(--color-emphasis);display:inline-block;position:relative;padding-bottom:0px}.fancy-link:after{content:'';display:block;margin:auto;height:1px;width:0px;background:transparent;transition:width .3s ease, background-color .3s ease}.fancy-link:hover:after{width:100%;background:var(--color-emphasis)}.container-fluid{padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}.navbar-toggle{border-width:0px}.navbar-default .navbar-toggle .icon-bar{background-color:var(--color-pale-white)}.navbar-brand.small{display:none}@media (max-width: 767px){.navbar-brand.normal{display:none}.navbar-brand.small{display:inline-block}}.speaker-wrapper{float:right}.speaker{background-image:url("data:image/png;base64,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");background-size:cover;height:40px;width:40px;margin-top:5px}pre{color:var(--color-pale-white);background-color:var(--color-text);border:inherit}code{color:var(--color-pale-white)}.code-copy{float:right;right:0px;display:none;background-color:var(--color-text);padding:5px 5px 5px 5px;border-radius:3px;cursor:pointer}pre code{display:block}pre:hover>*>.code-copy{display:inline}.code-copy-textarea{position:absolute;left:-9999px;top:-9999px}pre.highlight{margin-bottom:-10px;padding-bottom:0px}.highlighter-rouge{background-color:#DFDFDF;color:#151515;border-radius:5px;padding-top:4px}.highlight{background-color:#151515;border:0px;color:#F2F2F4}div.highlighter-rouge,figure.highlighter-rouge{background-color:#151515;color:#D7D7D7;padding-bottom:1.5em;margin-bottom:0.65em}.fancy-link code{color:#337ab7}.fancy-link:hover code{color:#23527c}.fancy-link:hover:after code{background-color:#337ab7}.table>tbody>tr>td,table>tbody>tr>td,.table>tbody>tr>th,table>tbody>tr>th,.table>tfoot>tr>td,table>tfoot>tr>td,.table>tfoot>tr>th,table>tfoot>tr>th,.table>thead>tr>td,table>thead>tr>td,.table>thead>tr>th,table>thead>tr>th{border-top:0px}.table,table{margin-left:40px;width:75%}.search-icon-div{width:initial;padding-left:10px;background-color:white;height:34px;border-radius:3px 0px 0px 3px}.glyphicon-search{font-size:32px;top:0px;color:#2C72AD}.search{border-radius:0px 3px 3px 0px;border:0px;outline:none;box-shadow:none}.no-gutter>[class*='col-']{padding-right:0;padding-left:0}.result-link{font-size:24px;text-decoration:underline}.result-div{padding-bottom:12px}.highlight-result{background-color:yellow;border-radius:3px;color:black;padding-left:2px;padding-right:2px}tbody tr:nth-child(odd){background-color:#DDD;border-radius:20px}html.hacker,body.hacker,header.hacker,nav.hacker,:not(.card-staff)>*>div:not(.card-staff).hacker,table.hacker,pre.hacker,span.hacker,:not(.card-staff)>a.hacker,p.hacker,h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:white !important;font-family:monospace !important;background-color:black !important}h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:#20C20E !important}ul.hacker{list-style-type:square}pre.hacker{border-color:white;border-radius:0}.toc.hacker{border-left-width:0}.content .highlighter-rouge.hacker{font-weight:bold;background-color:black}.pad.hacker{padding:0}a.hacker{color:#20C20E}tbody tr:nth-child(odd).hacker{background-color:inherit}body.hacker .day,body.hacker .announcement-card{background-color:#151515}body.hacker .announcement{color:white !important}#tuxlink img.hacker{-ms-interpolation-mode:nearest-neighbor;image-rendering:pixelated}.apply-button{border:none;background-color:white;padding:10px 20px 10px 20px;font-size:36px;border-radius:5px;box-shadow:5px 5px gray;margin:10px auto 10px auto;display:block;transition:background-color 0.5s ease}.apply-button:hover{background-color:var(--color-primary)}li.navbar-subitem{float:left;overflow:hidden;width:100%}.navbar-item,.navbar-subitem{color:var(--color-navbar-text);text-align:center;font-family:'Roboto', sans-serif}li.navbar-item:hover,li.navbar-subitem:hover{background-color:white}li.navbar-item:hover>a,li.navbar-subitem:hover>a{color:var(--color-primary) !important}.subitem-container{display:none;position:absolute;min-width:8vw;background-color:var(--color-primary);box-shadow:0px 8px 16px 0px var(--color-translucent);z-index:1;width:100%}.navbar-item:hover .subitem-container{display:block}.staff{width:100%}.flexbox-item div.staff-image{width:18vh;height:18vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.flexbox-item:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-weight:100;padding-top:2vh;color:var(--color-secondary-emphasis)}.heading{text-align:center;font-family:Roboto, Helvetica, sans-serif;font-size:3em;padding:1em;padding:0}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}main{text-align:center;margin:0;padding:0;background-color:white}.card-body{background-color:var(--color-pale-white);padding:2vh;display:block}.card-body.course-heading{background-color:rgba(72,105,255,0.945)}.card-body.card-body.course-heading h1{color:white}.card-body.course-information{background-color:white}h2{font-weight:200}section.flexbox{display:flex;justify-content:center;margin:auto;flex-wrap:wrap;width:90vw}.flexbox-item{display:inline-block;padding:2vh;margin:2vh}img.logo{width:2vw;height:3vw;margin:2vh}@media (max-width: 480px){.flexbox-item div.staff-image{width:18vh;height:18vh}img.logo{width:10vw;height:8vh}.staff-name{font-size:0.75em}}.infrastructure-links{margin:auto;text-align:center;display:block}.gallery{display:flex;justify-content:center;margin:auto;padding:5vw;flex-wrap:wrap;width:100vw}.staff{width:100%}.staff-container{margin:2vh}.staff-container div.staff-image{width:24vh;height:24vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.staff-container:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-size:1.5em;padding-top:1vh;color:var(--color-emphasis)}.heading{text-align:center}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}@media only screen and (max-width: 480px){.staff-container div.staff-image{width:20vh;height:20vh}.staff-name{font-size:1.25em}}.latest-mp{background-color:rgba(16,213,147,0.85)}.latest-lab{background-color:rgba(255,102,42,0.85)}.latest-assignments section.flexbox-item{border-radius:4%}
+/*# sourceMappingURL=/assets/source-maps/main.css.map */
+/*# sourceURL=css/main.css */
+</style>
+
+  <meta property="og:locale" content="en_US">
+  
+  
+  <meta property="og:title" content="Security" />
+  
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="http://cs241.cs.illinois.edu" />
+  
+  
+  <meta property="og:description" content=""Webpage for CS 241: System Programming at the University of Illinois at Urbana-Champaign. All documentation and information about the course can be found here."
+" />
+  
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- Navigation button as html so we don't have to resize images -->
+      <button
+        type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-expanded="false"
+        aria-controls="navbar"
+      >
+        <!-- Hamburger Navigation bar on small -->
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Full title on laptop -->
+      <a class="navbar-brand navbar-item normal" href="../index.html">
+             <span>CS 241: System Programming</span> 
+      </a>
+
+      <!-- Smaller on mobile-->
+      <a class="navbar-brand navbar-item small" href="../index.html">
+          <span>CS 241</span>
+      </a>
+    </div>
+
+    <!-- Finally generate what is in the navbar -->
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        <li class="navbar-item">
+          <a href="../assignments.html">Assignments</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../quiz_topics.html">Quizzes</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../grades.html">Grades</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../schedule.html">Schedule</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../lectures.html">Lectures</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../syllabus.html">Syllabus</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../staff.html">Staff</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../staff_hall_of_fame.html">Staff Hall of Fame</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../resources.html">Resources</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../peer_tutoring.html">Peer Tutoring</a>
+            </li>
+            
+            <li class="navbar-subitem">
+              <a href="index.html">Coursebook</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../honors.html">Honors</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto"
+    rel="stylesheet"
+  />
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            
+            
+            
+            <h1>
+              Security
+
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      
+      <div id="content">
+          <div class="wrapper">
+
+</div>
+          <div class="wrapper">
+<ul>
+  <li>
+<a href="#security" class="fancy-link wiki-link">Security</a>
+    <ul>
+      <li>
+<a href="#security-terminology-and-ethics" class="fancy-link wiki-link">Security Terminology and
+Ethics</a>
+        <ul>
+          <li><a href="#cia-triad" class="fancy-link wiki-link">CIA Triad</a></li>
+        </ul>
+      </li>
+      <li>
+<a href="#security-in-c-programs" class="fancy-link wiki-link">Security in C Programs</a>
+        <ul>
+          <li><a href="#stack-smashing" class="fancy-link wiki-link">Stack Smashing</a></li>
+          <li><a href="#buffer-overflow" class="fancy-link wiki-link">Buffer Overflow</a></li>
+          <li><a href="#out-of-order-instructions-spectre" class="fancy-link wiki-link">Out of order instructions &amp;
+Spectre</a></li>
+          <li><a href="#operating-systems-security" class="fancy-link wiki-link">Operating Systems Security</a></li>
+          <li><a href="#virtualization-security" class="fancy-link wiki-link">Virtualization Security</a></li>
+          <li><a href="#extra-security-through-scrubbing" class="fancy-link wiki-link">Extra: Security through
+scrubbing</a></li>
+        </ul>
+      </li>
+      <li>
+<a href="#cyber-security" class="fancy-link wiki-link">Cyber Security</a>
+        <ul>
+          <li><a href="#security-at-the-tcp-level" class="fancy-link wiki-link">Security at the TCP Level</a></li>
+          <li><a href="#security-at-the-dns-level" class="fancy-link wiki-link">Security at the DNS Level</a></li>
+        </ul>
+      </li>
+      <li><a href="#topics" class="fancy-link wiki-link">Topics</a></li>
+      <li><a href="#review" class="fancy-link wiki-link">Review</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p><span> </span></p>
+
+
+
+<p><strong>Hackers Are Like Artists, Who Wake Up In A Good Mood &amp; Start
+Painting</strong> - <strong>Vladimir Putin</strong></p>
+
+<p>Computer security is the protection of hardware and software from
+unauthorized access or modification. Even if you don’t work directly in
+the computer security field, the concepts are important to learn because
+all systems will have attackers given enough time. Even though this is
+introduced as a different chapter, it is important to note that most of
+these concepts and code examples have already been introduced at
+different points in the course. We won’t go in depth about all of the
+common ways of attack and defense nor will we go into how to perform all
+of these attacks in an arbitrary system. Our goal is to introduce you to
+the field of making programs do what you want to do.</p>
+
+<div class="pad"><div class="card">
+<div class="title"><h2 id="security-terminology-and-ethics" class="title-text">Security Terminology and Ethics<a class="anchor title-text" href="#security-terminology-and-ethics">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>There is some terminology that needs to be explained to get someone who
+has little to no experience in computer security up to speed</p>
+<ol>
+  <li>
+    <p>An <strong>Attacker</strong> is typically the user who is trying to break into
+the system. Breaking into the system means performing an action that
+the developer of the system didn’t intend. It could also mean
+accessing a system you shouldn’t have access to.</p>
+  </li>
+  <li>
+    <p>A <strong>Defender</strong> is typically the user who is preventing the attacker
+from breaking into the system. This may be the developer of the
+system.</p>
+  </li>
+  <li>
+    <p>There are different types of attackers. There are <strong>white hat</strong>
+hackers who attempt to hack a defender with their consent. This is
+commonly a form of pre-emptive testing – in case a not-so-friendly
+attack comes along. The <strong>black hat</strong> hackers are hackers who hack
+without permission and the intent to use the information obtained
+for any purpose. Gray hat hacking differs because the hacker’s
+intent is to inform the defender of the vulnerability – though this
+can be hard to judge at times.</p>
+  </li>
+</ol>
+<p><strong>Danger Will Robinson</strong> Before we let you go much further, it is
+important that we talk about ethics. Before you skip over this section,
+know that your career quite literally can be terminated over an
+unethical decision that you might make. The computer fraud and security
+act is a broad, and arguably terrible law, that casts any non-authorized
+use of a ‘protected computer’ of a computer as a felony. Since most
+computers are involved in some interstate/international commerce (the
+internet) most computers fall under this category. It is important to
+think about your actions and have some ladder of accountability before
+executing any attack or defense. To be more concrete, make sure
+supervisors in your organization have given you their blessing before
+trying to execute an attack.</p>
+<p>First if at all possible, get written permission from one of your
+superiors. We do realize that this is a cop-out and this puts the blame
+up a level, but at the risk of sounding cynical organizations will often
+put blame on an individual employee to avoid damages TODO: <strong>Citation
+Needed</strong>. If not possible, try to go through the engineering steps</p>
+<ol>
+  <li>
+    <p>Figure out what the problem is that you are trying to solve. You
+can’t solve a problem that you don’t fully understand.</p>
+  </li>
+  <li>
+    <p>Determine whetheryou need to “hack” the system. A hack is defined
+generally as trying to use a system unintendedly. First, you should
+determine if your use is intended or unintended or somewhere in the
+middle – get a decision for them. If you can’t get that, make a
+reasonable judgement as to what the intended use.</p>
+  </li>
+  <li>
+    <p>Figure out a reasonable estimate of what the cost is to “hacking”
+the system. Get that reasonable estimate checked out with a few
+engineers so they can highlight things that you may have missed. Try
+to get someone to sign off on the plan.</p>
+  </li>
+  <li>
+    <p>Execute the plan with caution. If at any point something seems
+wrong, weigh the risks and execute the plan.</p>
+  </li>
+</ol>
+<p>If there isn’t a certain ethical guideline for the current application,
+then create some. This is often called a <code class="highlighter-rouge">policy vacuum</code>. This may seem
+like busy work and more on the “business side” than computer scientists
+are used to, but your career is at stake here. It is up to you as a
+computing professional to assess the risk and to decide whether to
+execute. Courts generally like sitting on precedent, but you can easily
+say that you aren’t a legal scholar. In lieu, you must be able to say
+that you reacted as a “reasonable” engineer would react.</p>
+<p>TODO: <strong>Link to some case studies of real engineers having to decide</strong></p>
+<h3 id="cia-triad" class="title-text">CIA Triad</h3>
+<p>There are three commonly accepted goals to help understand if a system
+is secure.</p>
+<ol>
+  <li>
+    <p>Information Confidentiality means that only authorized parties are
+allowed to see a piece of information</p>
+  </li>
+  <li>
+    <p>Information Integrity means that only authorized parties are allowed
+the modify a piece of information, regardless of whether they are
+allowed to see it. It ensures that information remains in complete
+during transit.</p>
+  </li>
+  <li>
+    <p>Information Availability means information, or a service, is
+available when it is needed.</p>
+  </li>
+  <li>
+    <p>The triad above forms the Confidentiality, Integrity, and
+Availability (CIA) triad, often authenticity is added as well.</p>
+  </li>
+</ol>
+<p>If any of these are broken, the security of a system (either a service
+or piece of information) has been compromised.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="security-in-c-programs" class="title-text">Security in C Programs<a class="anchor title-text" href="#security-in-c-programs">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h3 id="stack-smashing" class="title-text">Stack Smashing</h3>
+<p>Consider the following code snippet</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">greeting</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+  <span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Hello, %s!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">){</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">greeting</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>There is no checking on the bounds of strcpy! This means that we could
+potentially pass in a large string and get the program to do something
+unintended, usually via replacing the return address of the function
+with the address of malicious code. Most strings will cause the program
+to exit with a segmentation fault</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./a.out john
+Hello, john!
+$ ./a.out JohnAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...
+Program received signal SIGSEGV, Segmentation fault.
+...
+</code></pre></div></div>
+<p>If we manipulate the bytes in certain ways and the program was compiled
+with the correct flags, we can actually get access to a shell! Consider
+if that file is owned by root, we put in some valid bytecode (binary
+instructions) as the string. What will happen is we’ll try to execute
+<code class="highlighter-rouge">execve(’/bin/sh’, ’/bin/sh’, NULL , NULL)</code> that is compiled to the
+bytecode of the operating system and pass it as part of our string. With
+some luck, we will get access to a root shell.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./a.out &lt;payload&gt;
+root#
+</code></pre></div></div>
+<p>The question arises, which parts of the triad does this break? Try to
+answer that question yourself. So how would we go about fixing this? We
+could ingrain into most programmers at the C level to use <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/strncpy" class="fancy-link">strncpy</a></code> or
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/strlcpy" class="fancy-link">strlcpy</a></code> on OpenBSD systems. Turning on stack canaries as explained
+later will fix this issue as well.</p>
+<h3 id="buffer-overflow" class="title-text">Buffer Overflow</h3>
+<p>Most of you are already familiar with Buffer Overflows! A lot of time
+they are fairly tame, leading to simple program crashes or funny
+mistakes. Here is a complete example</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; cat main.c
+#include &lt;stdio.h&gt;
+
+int main() {
+    char out[10];
+    char in[10];
+    fscanf(stdin, "%s", in);
+    out[0] = 'a';
+    out[9] = '\0';
+    printf("%s\n", out);
+
+    return 0;
+}
+&gt; gcc main.c -fno-stack-protector # need the special flag otherwise won't work
+# Stack protectors are explained later.
+&gt; ./a.out
+hello
+a
+&gt; ./a.out
+hellloooooooo
+aoo
+&gt;
+</code></pre></div></div>
+<p>What happens here should be clear if you recall the c memory model. Out
+and in are both next to each other in memory. If you read in a string
+from standard input that overflows in, then you end up printing aoo. It
+gets a little more serious if the snippet starts out as</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">pass_hash</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+  <span class="kt">char</span> <span class="n">in</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+  <span class="n">read_user_password</span><span class="p">(</span><span class="n">pass_hash</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="out-of-order-instructions--spectre" class="title-text">Out of order instructions &amp; Spectre</h3>
+<p>Out of order execution is an amazing development that has been recently
+adopted by many hardware vendors (think 1990s) TODO: <strong>citation
+needed</strong>. Processors now instead of executing a sequence of instructions
+(let’s say assigning a variable and then another variable) execute
+instructions before the current one is done (Guide
+<a href="#ref-guide2011intel" class="fancy-link wiki-link">#ref-guide2011intel</a> P. 45). This is
+because modern processors spend a lot of time waiting for memory
+accesses and other I/O driven applications. This means that a processor,
+while it is waiting for an operation to complete, will execute the next
+few operations. If any of the operations would possibly alter the final
+result, there is a barrier, or if the re-ordering violates the data
+dependencies of the instructions, the processor keep the instructions in
+the stated order (Guide
+<a href="#ref-guide2011intel" class="fancy-link wiki-link">#ref-guide2011intel</a> P. 296).</p>
+<p>Naturally, this allowed CPUs to become more energy-efficient while
+executing more instructions in real-time and increased security risks
+from complex architectures. What system programmers are worried about is
+that operation with mutex locks among threads are out of order – meaning
+that a pure software implementation of a mutex will fail without copious
+memory barriers. Therefore, the programmer has to acknowledge that
+updates may be missed among a series of threads, given that there is no
+barrier, on modern processors.</p>
+<p>One of the most prominent bugs concerning this is Spectre (Kocher et al.
+<a href="#ref-kocher2018spectre" class="fancy-link wiki-link">#ref-kocher2018spectre</a>). Spectre is
+a bug where instructions that otherwise wouldn’t be executed are
+speculatively executed due to out-of-order instruction execution. The
+following snippet is a high-level proof of concept.</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xCAFE</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// This will be in a register</span>
+<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// This will be in main memory</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Let’s analyze this code. The first loop allocates 9 elements through a
+valid malloc. The last element is <code class="highlighter-rouge">0xCAFE</code>, meaning a dereference should
+result in a SEGFAULT. For the first 9 iterations, the branch is taken
+and <code class="highlighter-rouge">val</code> is assigned to a valid value. The interesting part happens in
+the last iteration. The resulting behavior of the program is to skip the
+last iteration. Therefore, <code class="highlighter-rouge">val</code> never gets assigned to the last value.</p>
+<p>But under the right compilation conditions and compiler flags, the
+instructions will be speculatively executed. The processor thinks that
+the branch will be taken, since it has been taken in the last 9
+iterations. As such, the processor will fetch those instructions. Due to
+out-of-order instruction execution, while the value of <em>i</em> is being
+fetched from memory, we have to force it not to be in a register. Then,
+the processor will try to dereference that address. This should result
+in a SEGFAULT. Since the address was never logically reached by the
+program, the result is discarded.</p>
+<p>Now here is the trick. Even though the value of the calculation would
+have resulted in a SEGFAULT, the bug doesn’t clear the cache that refers
+to the physical memory where 0xCAFE is located. This is an inexact
+explanation, but essentially how it works. Since it is still in the
+cache, if you again trick the processor to read form the cache using
+<code class="highlighter-rouge">val</code> then you will read a memory value that you wouldn’t be able to
+read normally. This could include important information such as
+passwords, payment information, etc.</p>
+<h3 id="operating-systems-security" class="title-text">Operating Systems Security</h3>
+<ol>
+  <li>
+    <p>Permissions. In POSIX systems, we have permissions everywhere. There
+are directories that you can and can’t access, files that you can
+and can’t access. Each user account is given access to each file and
+directory through the read-write-execute (RWX) bits. The user gets
+matched with either the owner, the group, or ‘everyone else’, and
+their access to the file is limited using these bits. Note that
+permissions work slightly differently on directories compared to
+files.</p>
+  </li>
+  <li>
+    <p>Capabilities. In addition to permissions on files, each user has a
+certain set of permissions that they can do. For a full list, you
+can check capabilities(7). In short, allowing a capability allows a
+user to perform a set of actions. Some examples include controlling
+networking devices, creating special files, and peering into IPC or
+interprocess communication.</p>
+  </li>
+  <li>
+    <p>Address Space Layout Randomization (ASLR). ASLR causes the address
+spaces of important sections of a process, including the base
+address of the executable and the positions of the stack, heap and
+libraries, to start at randomized values, on every run. This is so
+that an attacker with a running executable has to randomly guess
+where sensitive information could be hidden. For example, an
+attacker may use this to easily perform a <code class="highlighter-rouge">return-to-libc</code> attack.</p>
+  </li>
+  <li>
+    <p>Stack Protectors. Let’s say you’ve programmed a buffer overflow as
+above. In most cases, what happens? Unless specifically turned off,
+the compiler will put in stack protectors or stack canaries. This is
+a value that resides in the stack and must remain constant for the
+duration of the function call. If that protector is overwritten at
+the end of the function call, the run time will abort and report to
+the user that stack smashing was detected.</p>
+  </li>
+  <li>
+    <p>Write xor Execute, also known as <code class="highlighter-rouge">Data Execution Prevention</code> (DEP).
+This is a protection that was covered in the IPC section that
+distinguishes code from data. A page can either be written to or
+executed but not both. This is to prevent buffer overflows where
+attackers write arbitrary code, often stored on the stack or heap,
+and execute with the user’s permissions.</p>
+  </li>
+  <li>
+    <p>Firewall. The Linux kernel provides the netfilter module as a way of
+deciding whetheran incoming connection should be allowed and various
+other restrictions on connections. This can help with a DDOS attack
+(explained later).</p>
+  </li>
+  <li>
+    <p>AppArmor. AppArmor is a suite of operating system tools at the
+userspace level to restrict applications to certain operations.</p>
+  </li>
+</ol>
+<p>OpenBSD is an arguably better system for security. It has many security
+oriented features. Some of these features have been touched upon
+earlier. An exhaustive list of features is at
+<a href="https://www.openbsd.org/innovations.html" class="fancy-link wiki-link">https://www.openbsd.org/innovations.html</a></p>
+<ol>
+  <li>
+    <p>pledge. Pledge is a powerful command that restricts system calls.
+This means if you have a simple program like <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/cat" class="fancy-link">cat</a></code> which only reads
+to and from files, one can reasonably restrict all network access,
+pipe access, and write access to files. This is known as the process
+of “hardening” an executable or system, giving the smallest amount
+of permissions to the least number of executables needed to run a
+system. Pledge is also useful in case one tries to perform an
+injection attack.</p>
+  </li>
+  <li>
+    <p>unveil. Unveil is a system call that restricts the access of a
+current program to a few directories. Those permissions apply to all
+forked programs as well. This means if you have a suspicious
+executable that you want to run whose description is “creates a new
+file and outputs random words” one could use this call to restrict
+access to a safe subdirectory and watch it receive the SIGKILL
+signal if it tries to access system files in the root directory, for
+example. This could be useful for your program as well. If you want
+to ensure that no user data is lost during an update (which is what
+happened with a Steam system update), then the system could only
+reveal the program’s installation directory. If an attacker manages
+to find an exploit in the executable, it can only compromise the
+installation directory.</p>
+  </li>
+  <li>
+    <p>sudo. Sudo is an openBSD project that runs everywhere! Before to
+run commands as root, one would have to drop to a root shell. Some
+times that would also mean giving users scary system capabilities.
+Sudo gives you access to perform commands as root for one-offs
+without giving a long list of capabilities to all of your users.</p>
+  </li>
+</ol>
+<h3 id="virtualization-security" class="title-text">Virtualization Security</h3>
+<p>Virtualization is the act of creating a virtual version of an
+environment for a program to run on. Though that definition might be
+bent a little with the advent of new-age bare metal Virtual Machines,
+the abstraction is still there. One can imagine a single Operating
+System per motherboard. Virtualization in the software sense is
+providing “virtual” motherboard features like USB ports or monitors that
+another program (the bridge) communicates with the actual hardware to
+perform a task. A simple example is running a virtual machine on your
+host desktop! One can spin up an entirely different operating system
+whose instructions are fed through another program and executed on the
+host system. There are many forms of virtualization that we use today.
+We will discuss two popular forms below. One form is virtual machines.
+These programs emulate <em>all</em> forms of motherboard peripherals to create
+a full machine. Another form is containers. Virtual machines are good
+but are often bulky and programs only need a certain level of
+protection. Containers are virtual machines that don’t emulate all
+motherboard peripherals and instead share with the host operating
+system, adding in additional layers of security.</p>
+<p>Now, you can’t have proper virtualization without security. One of the
+reasons to have virtualization is to ensure that the virtualized
+environment doesn’t maliciously leak back into the host environment. We
+say maliciously because there are intended ways of communication that we
+want to keep in check. Here are some simple examples of security
+provided through virtualization</p>
+<ol>
+  <li>
+    <p>chroot is a contrived way of creating a virtualization environment.
+chroot is short for change root. This changes where a program
+believes that (/) is mounted on the system. For example with chroot,
+one can make a hello world program believe <code class="highlighter-rouge">/home/bhuvan/</code> is
+actually the root directory. This is useful because no other files
+are exposed. This is contrived because Linux still needs additional
+tools (think the c standard library) to come from different
+directories such as <code class="highlighter-rouge">/usr/lib</code> which means those could still be
+vulnerable.</p>
+  </li>
+  <li>
+    <p>namespaces are Linux’s better way to create a virtualization
+environment. We won’t go into this too much, just know that they
+exist.</p>
+  </li>
+  <li>
+    <p>Hardware virtualization technology. Hardware vendors have become
+increasingly aware that physical protections are needed when
+emulating instructions. As such, there can be switches enabled by
+the user that allows the operating system to flip into a
+virtualization mode where instructions are run as normal but are
+monitored for malicious activity. This helps the performance and
+increases the security of virtualized environments.</p>
+  </li>
+</ol>
+<h3 id="extra-security-through-scrubbing" class="title-text">Extra: Security through scrubbing</h3>
+<p>Security isn’t just about making sure that a program cannot be
+manipulated to a malicious user’s ends. Some times, security is making
+sure that the program can’t be crashed or effectively timed with input.
+An example of the former is any attack where the attacker threatens to
+shut a system down due to a leak. This means that the system has a flaw
+where the user can input a value and cause the system to fail. One can
+imagine in mission-critical systems – power grids, medical devices, etc
+– this isn’t a lightly taken threat.</p>
+<p>Also, a lot of novice programmers neglect making a program look similar
+given all inputs. A common example of this is comparing two strings.
+Let’s say that you are guessing the Cross-Site Request Forgery (CSRF)
+token on a website. If the programmed server returns the request
+immediately after the token doesn’t match the server’s, that is a
+security bug. If the token matches none of the characters, an attacker
+now know that a quick response means that the first few characters were
+off. If the token matches some of the characters, an attacker knows that
+this request will take slightly longer. It is important to balance speed
+and security. If correct authentication parameters are supplied, the
+action should succeed immediately. However, if there is a mismatch,
+there should be no difference in time or content of the response for
+different reasons of failure, nor should any information be given to the
+user about the source of error. This is often accomplished by using a
+standard delay for responses to unsuccessful authentication attempts. We
+want to use a fast <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/memcmp" class="fancy-link">memcmp</a></code>, but it may be insecure.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="cyber-security" class="title-text">Cyber Security<a class="anchor title-text" href="#cyber-security">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Cyber Security is arguably the most popular area of security. More and
+more of our systems are hacked over the web, it is important to
+understand how we can protect against these attacks</p>
+<h3 id="security-at-the-tcp-level" class="title-text">Security at the TCP Level</h3>
+<ol>
+  <li>
+    <p>Encryption. <strong>TCP is unencrypted!</strong> This means any data that is
+sent over a TCP connection is in plain text. If one needs to send
+encrypted data, one needs to use a higher level protocol such as
+HTTPs or develop their own.</p>
+  </li>
+  <li>
+    <p>Identity Verification. In TCP, there is no way to verify the
+identity of who the program is connecting to. There are no checks or
+federated databases in place. One just has to trust the DNS server
+gave a reasonable response which is almost always the incorrect
+answer. Apart from systems that have an approved white list or a
+“secret” connection protocol, there is little at the TCP level
+that one can do to stop.</p>
+  </li>
+  <li>
+    <p>Syn-Ack Sequence Number. This is a security improvement. TCP
+features what we call sequence numbers. That means that during the
+SYN-SYN/ACK-ACK dance, a connection starts at a random integer. This
+is important because if an attacker is trying to spoof packets
+(pretend those packets are coming from your program) that means that
+the attacker must either correctly guess – which is hard – or be in
+the route that your packet takes to the destination – much more
+likely. ISPs help out with the destination problem because it may
+send a connection through varying routers which makes it hard for an
+attacker to sit anywhere and be sure that they will receive your
+packets – this is why security experts usually advise against using
+coffee shop wifi for sensitive tasks.</p>
+  </li>
+  <li>
+    <p>Syn-Flood. Before the first synchronization packet is acknowledged,
+there is no connection. That means a malicious attacker can write a
+bad TCP implementation that sends out a flood of SYN packets to a
+hapless server. The SYN flood is easily mitigated by using IPTABLES
+or another netfilter module to drop all incoming connections from an
+IP address after a certain volume of traffic is reached for a
+certain period.</p>
+  </li>
+  <li>
+    <p>Denial of Service, Distributed Denial of Service is the hardest form
+of attack to stop. Companies today are still trying to find good
+ways to ease these attacks. This involves sending all sorts of
+network traffic forward to servers in the hopes that the traffic
+will clog them up and slow down the servers. In big systems, this
+can lead to cascading failures. If a system is engineered poorly,
+one server’s failure causes all the other servers to pick up more
+work which increases the probability that they will fail and so on
+and so forth.</p>
+  </li>
+</ol>
+<h3 id="security-at-the-dns-level" class="title-text">Security at the DNS Level</h3>
+<p>As of 2019, the United States Department of Homeland Security released a
+directive to switch all services from DNS to DNSSec
+<a href="https://cyber.dhs.gov/assets/report/ed-19-01.pdf" class="fancy-link wiki-link">https://cyber.dhs.gov/assets/report/ed-19-01.pdf</a>.
+This directive is an inherent flaw of the DNS system. First, DNS doesn’t
+offer any sort of verification on domain name requests. That is, it is
+easy to spoof DNS nameservers such that they point your browser to
+potentially malicious servers. Remember that DNS requests are sent as
+unsecured UDP packets, which are prone to tampering. This means that if
+an attacker snags a plain-text request for a DNS server, that attacker
+can now send the result back to the requester. More commonly instead of
+just attacking one person, they will connect to a public wifi station
+and poison the cache of the router – meaning that all who are connected
+will get a bad IP address when requesting a domain name. This can get
+into serious spoofing attacks if one tries to pretend they are a major
+bank.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="topics" class="title-text">Topics<a class="anchor title-text" href="#topics">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><ol>
+  <li>
+    <p>Security Terminology</p>
+  </li>
+  <li>
+    <p>Security in local C programs</p>
+  </li>
+  <li>
+    <p>Security in CyberSpace</p>
+  </li>
+</ol></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="review" class="title-text">Review<a class="anchor title-text" href="#review">#</a>
+</h2></div>
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<ol>
+  <li>
+    <p>What is a chmod statement to break only the confidentiality of your
+data?</p>
+  </li>
+  <li>
+    <p>What is a chmod statement to break only the confidentiality and
+availability of your data?</p>
+  </li>
+  <li>
+    <p>An attacker gains root access on a Linux system that you use to
+store private information. Does this affect confidentiality,
+integrity, or availability of your information, or all three?</p>
+  </li>
+  <li>
+    <p>Hackers brute force your git username and password. Who is affected?</p>
+  </li>
+  <li>
+    <p>Why is privilege separation useful in RPC applications?</p>
+  </li>
+  <li>
+    <p>Is it easier to forge a UDP or TCP packet and why?</p>
+  </li>
+  <li>
+    <p>Why are TCP sequence numbers initialized to a random number?</p>
+  </li>
+  <li>
+    <p>What is the impact if the RAM used to hold a shared library (e.g.
+the C standard library) was writable by any process?</p>
+  </li>
+  <li>
+    <p>Is creating and implementing client-server protocols that are secure
+and invulnerable to malicious attackers easy?</p>
+  </li>
+  <li>
+    <p>Which is harder to defend against: Syn-Flooding or Distributed
+Denial of Service?</p>
+  </li>
+  <li>
+    <p>Does deadlock affect the availability of a service?</p>
+  </li>
+  <li>
+    <p>Do buffer overflows / underflows affect the integrity of a data?</p>
+  </li>
+  <li>
+    <p>Why shouldn’t stack memory be executable.</p>
+  </li>
+  <li>
+    <p>HeartBleed is an example of what kind of security issue? Which
+one(s) of the triad does it break?</p>
+  </li>
+  <li>
+    <p>Meltdown and Spectre is an example of what kind of security issue?
+Which one(s) of the triad does it break?</p>
+  </li>
+</ol>
+<div id="refs" class="references">
+
+<div id="ref-guide2011intel">
+
+Guide, Part. 2011. “Intel 64 and Ia-32 Architectures Software
+Developer’s Manual.” *Volume 3B: System Programming Guide, Part* 2.
+
+</div>
+
+<div id="ref-kocher2018spectre">
+
+Kocher, Paul, Daniel Genkin, Daniel Gruss, Werner Haas, Mike Hamburg,
+Moritz Lipp, Stefan Mangard, Thomas Prescher, Michael Schwarz, and Yuval
+Yarom. 2018. “Spectre Attacks: Exploiting Speculative Execution.” *arXiv
+Preprint arXiv:1801.01203*.
+
+</div>
+
+</div>
+</div></div></div>
+</div></div>
+</div>
+          
+          <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_coursebook/Security.md";
+  </script>
+  <!-- Mathjax takes a while to load so do a lazy load to so we can get accessibility -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" crossorigin="anonymous"></script>
+
+<!-- Bring in JQuery and Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<footer class="">
+
+<!-- Add another container at the bottom so there is some space there -->
+<div class="container-fluid">
+<div class="shadow"></div>
+
+</div>
+
+</footer>
+
+</body>
+
+<!-- Mirrored from cs241.cs.illinois.edu/coursebook/Security by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:37:28 GMT -->
+</html>

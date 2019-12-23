@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from cs241.cs.illinois.edu/assignments/malloc.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:32:32 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="utf-8">
+
+  <!-- If for some reason you are using IE, use edge -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- So bootstrap isn't horrible, set the width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="../images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="../images/favicons/manifest.json">
+  <link rel="mask-icon" href="../images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>CS 241 · Malloc</title>
+
+  <!-- Reference a CDN so this is properly cached in the browser forever. Unless they clean out the
+       Cache this will incur no load time. Ideally we should put a security checksum but that breaks
+       Firefox development sometimes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <!-- Asynchronously load the code style sheet because we want everything loaded as fast as possible
+       Also tag with ?v=time to bust the cache of any browser so updates appear -->
+  <style rel="stylesheet" type="text/css">.highlight table td{padding:5px}.highlight table pre{margin:0}.highlight,.highlight .w{color:#93a1a1;background-color:#002b36}.highlight .err{color:#002b36;background-color:#dc322f}.highlight .c,.highlight .cd,.highlight .cm,.highlight .c1,.highlight .cs{color:#657b83}.highlight .cp{color:#b58900}.highlight .nt{color:#b58900}.highlight .o,.highlight .ow{color:#93a1a1}.highlight .p,.highlight .pi{color:#93a1a1}.highlight .gi{color:#859900}.highlight .gd{color:#dc322f}.highlight .gh{color:#268bd2;background-color:#002b36;font-weight:bold}.highlight .k,.highlight .kn,.highlight .kp,.highlight .kr,.highlight .kv{color:#6c71c4}.highlight .kc{color:#cb4b16}.highlight .kt{color:#cb4b16}.highlight .kd{color:#cb4b16}.highlight .s,.highlight .sb,.highlight .sc,.highlight .sd,.highlight .s2,.highlight .sh,.highlight .sx,.highlight .s1{color:#859900}.highlight .sr{color:#2aa198}.highlight .si{color:#d33682}.highlight .se{color:#d33682}.highlight .nn{color:#b58900}.highlight .nc{color:#b58900}.highlight .no{color:#b58900}.highlight .na{color:#268bd2}.highlight .m,.highlight .mf,.highlight .mh,.highlight .mi,.highlight .il,.highlight .mo,.highlight .mb,.highlight .mx{color:#859900}.highlight .ss{color:#859900}
+/*# sourceMappingURL=/assets/source-maps/code-style.css.map */
+/*# sourceURL=css/code-style.css */
+</style>
+  <style rel="stylesheet" type="text/css">:root{--color-primary: hsl(207, 59%, 43%);--color-secondary: hsl(207, 70%, 53%);--color-emphasis: hsl(204, 100%, 42%);--color-text: hsl(0, 0%, 0%);--color-translucent: hsla(0, 0%, 0%, 0.3);--color-pale-white: hsla(240, 8%, 95%)}body{padding-top:50px;font-family:Roboto, Helvetica, Arial, sans-serif;background-color:var(--color-pale-white);color:var(--color-text);padding-bottom:50px}@media (min-width: 768px) and (max-width: 991px){body{padding-top:100px}}.navbar{background-color:var(--color-primary);border-color:var(--color-secondary);border:0px;border-top:none;box-shadow:none;margin-bottom:0}.navbar-default .navbar-brand{color:var(--color-pale-white) !important;font-weight:bold}.navbar-default .navbar-nav>li>a{color:var(--color-pale-white) !important}.navbar-collapse{border-top:0px !important;box-shadow:none}.navbar-brand:hover{color:var(--color-navbar-text) !important}.github-link{display:inline-block;vertical-align:middle;margin-left:0.5em;text-indent:-9999px;width:32px;height:32px;background-image:url(NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjMTgxNjE2IiBkPSJNMzIuNiwzLjRDMTYuMywzLjQsMywxNi43LDMsMzMuMWMwLDEzLjEsOC41LDI0LjIsMjAuMywyOC4xDQoJYzEuNSwwLjMsMi0wLjYsMi0xLjRjMC0wLjcsMC0yLjYsMC01Yy04LjIsMS44LTEwLTQtMTAtNGMtMS4zLTMuNC0zLjMtNC4zLTMuMy00LjNjLTIuNy0xLjgsMC4yLTEuOCwwLjItMS44YzMsMC4yLDQuNSwzLjEsNC41LDMuMQ0KCWMyLjYsNC41LDYuOSwzLjIsOC42LDIuNWMwLjMtMS45LDEtMy4yLDEuOS00Yy02LjYtMC43LTEzLjUtMy4zLTEzLjUtMTQuNmMwLTMuMiwxLjItNS45LDMtNy45Yy0wLjMtMC43LTEuMy0zLjgsMC4zLTcuOA0KCWMwLDAsMi41LTAuOCw4LjEsM2MyLjQtMC43LDQuOS0xLDcuNC0xYzIuNSwwLDUsMC4zLDcuNCwxYzUuNy0zLjgsOC4xLTMsOC4xLTNjMS42LDQuMSwwLjYsNy4xLDAuMyw3LjhjMS45LDIuMSwzLDQuNywzLDcuOQ0KCWMwLDExLjQtNi45LDEzLjktMTMuNSwxNC42YzEuMSwwLjksMiwyLjcsMiw1LjVjMCw0LDAsNy4yLDAsOC4xYzAsMC44LDAuNSwxLjcsMiwxLjRjMTEuOC0zLjksMjAuMi0xNSwyMC4yLTI4LjENCglDNjIuMiwxNi43LDQ5LDMuNCwzMi42LDMuNHoiLz4NCjwvc3ZnPg0K)}h1{padding-bottom:20px;font-size:48px}h2{padding-top:50px;margin-top:-20px}.navbar-nav,.navbar-nav>ul{margin:0}@media (max-width: 767px){h1{font-size:36px}h2{font-size:22px}p,li{font-size:12px}}.popover{background-color:black;color:black;display:block}.popover-title{background-color:black;color:black;font-size:12px;text-align:center;border-bottom:0px}.popover-title a{color:white;cursor:pointer}.popover-content{background-color:black;padding:0px}.popover.top>.arrow:after{border-top-color:black}table{width:100%}.anchor{display:none;padding-left:5px}.title-text:hover>.anchor{display:inline}.day{height:300px;margin-bottom:20px;width:100%;background-color:#fff;border-radius:3px}.day h1{color:#f1f1f3}.day-summary,.day-resources{color:#000}.day-resources{position:absolute;bottom:20px}.day-summary{position:absolute;top:75px}.day-title-text h3{margin:0px}.day-title{padding-top:5px;padding-bottom:5px;border-radius:3px;height:70px}.schedule-container{margin-left:20px;margin-right:20px}ul.toc{list-style:none;padding-left:1em}h1,h2,h3{color:var(--color-secondary)}.announcement-card{background-color:var(--color-pale-white);border-radius:5px}.annoucement-title{margin-top:5px}.day-title-h3{color:var(--color-pale-white)}img:not(.emoji){max-height:80vh;display:inline-block;margin:auto;max-width:100%}.img-paragraph{display:grid}.hidden{display:none !important}.loader,.loader:before,.loader:after{border-radius:50%}.loader{color:var(--color-pale-white);font-size:11px;text-indent:-99999em;margin:55px auto;position:relative;width:10em;height:10em;box-shadow:inset 0 0 0 1em;-webkit-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0)}.loader:before,.loader:after{position:absolute;content:''}.loader:before{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:10.2em 0 0 10.2em;top:-0.1em;left:-0.1em;-webkit-transform-origin:5.2em 5.1em;transform-origin:5.2em 5.1em;-webkit-animation:load2 2s infinite ease 1.5s;animation:load2 2s infinite ease 1.5s}.loader:after{width:5.2em;height:10.2em;background:#0dc5c1;border-radius:0 10.2em 10.2em 0;top:-0.1em;left:5.1em;-webkit-transform-origin:0px 5.1em;transform-origin:0px 5.1em;-webkit-animation:load2 2s infinite ease;animation:load2 2s infinite ease}@-webkit-keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes load2{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.anchor{text-decoration:none}.anchor:hover{text-decoration:none}.fancy-link{text-decoration:none !important;color:var(--color-emphasis);display:inline-block;position:relative;padding-bottom:0px}.fancy-link:after{content:'';display:block;margin:auto;height:1px;width:0px;background:transparent;transition:width .3s ease, background-color .3s ease}.fancy-link:hover:after{width:100%;background:var(--color-emphasis)}.container-fluid{padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}.navbar-toggle{border-width:0px}.navbar-default .navbar-toggle .icon-bar{background-color:var(--color-pale-white)}.navbar-brand.small{display:none}@media (max-width: 767px){.navbar-brand.normal{display:none}.navbar-brand.small{display:inline-block}}.speaker-wrapper{float:right}.speaker{background-image:url("data:image/png;base64,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");background-size:cover;height:40px;width:40px;margin-top:5px}pre{color:var(--color-pale-white);background-color:var(--color-text);border:inherit}code{color:var(--color-pale-white)}.code-copy{float:right;right:0px;display:none;background-color:var(--color-text);padding:5px 5px 5px 5px;border-radius:3px;cursor:pointer}pre code{display:block}pre:hover>*>.code-copy{display:inline}.code-copy-textarea{position:absolute;left:-9999px;top:-9999px}pre.highlight{margin-bottom:-10px;padding-bottom:0px}.highlighter-rouge{background-color:#DFDFDF;color:#151515;border-radius:5px;padding-top:4px}.highlight{background-color:#151515;border:0px;color:#F2F2F4}div.highlighter-rouge,figure.highlighter-rouge{background-color:#151515;color:#D7D7D7;padding-bottom:1.5em;margin-bottom:0.65em}.fancy-link code{color:#337ab7}.fancy-link:hover code{color:#23527c}.fancy-link:hover:after code{background-color:#337ab7}.table>tbody>tr>td,table>tbody>tr>td,.table>tbody>tr>th,table>tbody>tr>th,.table>tfoot>tr>td,table>tfoot>tr>td,.table>tfoot>tr>th,table>tfoot>tr>th,.table>thead>tr>td,table>thead>tr>td,.table>thead>tr>th,table>thead>tr>th{border-top:0px}.table,table{margin-left:40px;width:75%}.search-icon-div{width:initial;padding-left:10px;background-color:white;height:34px;border-radius:3px 0px 0px 3px}.glyphicon-search{font-size:32px;top:0px;color:#2C72AD}.search{border-radius:0px 3px 3px 0px;border:0px;outline:none;box-shadow:none}.no-gutter>[class*='col-']{padding-right:0;padding-left:0}.result-link{font-size:24px;text-decoration:underline}.result-div{padding-bottom:12px}.highlight-result{background-color:yellow;border-radius:3px;color:black;padding-left:2px;padding-right:2px}tbody tr:nth-child(odd){background-color:#DDD;border-radius:20px}html.hacker,body.hacker,header.hacker,nav.hacker,:not(.card-staff)>*>div:not(.card-staff).hacker,table.hacker,pre.hacker,span.hacker,:not(.card-staff)>a.hacker,p.hacker,h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:white !important;font-family:monospace !important;background-color:black !important}h1.hacker,h2.hacker,h3.hacker,h4.hacker,h5.hacker,h6.hacker{color:#20C20E !important}ul.hacker{list-style-type:square}pre.hacker{border-color:white;border-radius:0}.toc.hacker{border-left-width:0}.content .highlighter-rouge.hacker{font-weight:bold;background-color:black}.pad.hacker{padding:0}a.hacker{color:#20C20E}tbody tr:nth-child(odd).hacker{background-color:inherit}body.hacker .day,body.hacker .announcement-card{background-color:#151515}body.hacker .announcement{color:white !important}#tuxlink img.hacker{-ms-interpolation-mode:nearest-neighbor;image-rendering:pixelated}.apply-button{border:none;background-color:white;padding:10px 20px 10px 20px;font-size:36px;border-radius:5px;box-shadow:5px 5px gray;margin:10px auto 10px auto;display:block;transition:background-color 0.5s ease}.apply-button:hover{background-color:var(--color-primary)}li.navbar-subitem{float:left;overflow:hidden;width:100%}.navbar-item,.navbar-subitem{color:var(--color-navbar-text);text-align:center;font-family:'Roboto', sans-serif}li.navbar-item:hover,li.navbar-subitem:hover{background-color:white}li.navbar-item:hover>a,li.navbar-subitem:hover>a{color:var(--color-primary) !important}.subitem-container{display:none;position:absolute;min-width:8vw;background-color:var(--color-primary);box-shadow:0px 8px 16px 0px var(--color-translucent);z-index:1;width:100%}.navbar-item:hover .subitem-container{display:block}.staff{width:100%}.flexbox-item div.staff-image{width:18vh;height:18vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.flexbox-item:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-weight:100;padding-top:2vh;color:var(--color-secondary-emphasis)}.heading{text-align:center;font-family:Roboto, Helvetica, sans-serif;font-size:3em;padding:1em;padding:0}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}main{text-align:center;margin:0;padding:0;background-color:white}.card-body{background-color:var(--color-pale-white);padding:2vh;display:block}.card-body.course-heading{background-color:rgba(72,105,255,0.945)}.card-body.card-body.course-heading h1{color:white}.card-body.course-information{background-color:white}h2{font-weight:200}section.flexbox{display:flex;justify-content:center;margin:auto;flex-wrap:wrap;width:90vw}.flexbox-item{display:inline-block;padding:2vh;margin:2vh}img.logo{width:2vw;height:3vw;margin:2vh}@media (max-width: 480px){.flexbox-item div.staff-image{width:18vh;height:18vh}img.logo{width:10vw;height:8vh}.staff-name{font-size:0.75em}}.infrastructure-links{margin:auto;text-align:center;display:block}.gallery{display:flex;justify-content:center;margin:auto;padding:5vw;flex-wrap:wrap;width:100vw}.staff{width:100%}.staff-container{margin:2vh}.staff-container div.staff-image{width:24vh;height:24vh;overflow:hidden;background-size:cover;padding:0;border-radius:50%}.staff-container:hover div.staff-image{box-shadow:0 4px 12px 0 var(--color-translucent),0 6px 20px 0 var(--color-translucent)}.staff-name{bottom:0px;width:100%;text-align:center;font-size:1.5em;padding-top:1vh;color:var(--color-emphasis)}.heading{text-align:center}section.center{text-align:center;padding-left:3vw;padding-right:3vw;padding-bottom:0;padding-top:0}@media only screen and (max-width: 480px){.staff-container div.staff-image{width:20vh;height:20vh}.staff-name{font-size:1.25em}}.latest-mp{background-color:rgba(16,213,147,0.85)}.latest-lab{background-color:rgba(255,102,42,0.85)}.latest-assignments section.flexbox-item{border-radius:4%}
+/*# sourceMappingURL=/assets/source-maps/main.css.map */
+/*# sourceURL=css/main.css */
+</style>
+
+  <meta property="og:locale" content="en_US">
+  
+  
+  <meta property="og:title" content="Malloc" />
+  
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="http://cs241.cs.illinois.edu" />
+  
+  
+  <meta property="og:description" content=""Webpage for CS 241: System Programming at the University of Illinois at Urbana-Champaign. All documentation and information about the course can be found here."
+" />
+  
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- Navigation button as html so we don't have to resize images -->
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+        <!-- Hamburger Navigation bar on small -->
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Full title on laptop -->
+      <a class="navbar-brand navbar-item normal" href="../index.html">
+             <span>CS 241: System Programming</span> 
+      </a>
+
+      <!-- Smaller on mobile-->
+      <a class="navbar-brand navbar-item small" href="../index.html">
+          <span>CS 241</span>
+      </a>
+    </div>
+
+    <!-- Finally generate what is in the navbar -->
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        <li class="navbar-item">
+          <a href="../assignments.html">Assignments</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../quiz_topics.html">Quizzes</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../grades.html">Grades</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../schedule.html">Schedule</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../lectures.html">Lectures</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../syllabus.html">Syllabus</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../staff.html">Staff</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../staff_hall_of_fame.html">Staff Hall of Fame</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../resources.html">Resources</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+            <li class="navbar-subitem">
+              <a href="../peer_tutoring.html">Peer Tutoring</a>
+            </li>
+            
+            <li class="navbar-subitem">
+              <a href="../coursebook/index.html">Coursebook</a>
+            </li>
+            
+          </ul>
+        </li>
+        
+        <li class="navbar-item">
+          <a href="../honors.html">Honors</a>
+          <!-- Generate sublinks-->
+          <ul class="nav navbar-nav subitem-container">
+            
+          </ul>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            
+            
+            
+            <h1>
+              Malloc
+
+              
+                <a class="github-link hidden-xs" href="https://github.com/illinois-cs241/assignment-docs/blob/master//malloc.md">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+              <div class="submission-wrapper">
+                
+                  <b>Part 1</b> due <b>2019-10-07 23:59</b><br>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>alloc.c</li>
+                      
+                    </ul>
+                  
+                
+                  <b>Part 2</b> due <b>2019-10-14 23:59</b><br>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>alloc.c</li>
+                      
+                    </ul>
+                  
+                
+              </div>
+            
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_backstory" href="#backstory" class="fancy-link">Backstory</a></li>
+<li><a id="toc_overview" href="#overview" class="fancy-link">Overview</a></li>
+<li><a id="toc_a-bad-example" href="#a-bad-example" class="fancy-link">A Bad Example</a></li>
+<li><a id="toc_testing-your-code" href="#testing-your-code" class="fancy-link">Testing Your Code</a></li>
+<li><a id="toc_grading" href="#grading" class="fancy-link">Grading</a></li>
+<li><a id="toc_contest" href="#contest" class="fancy-link">Contest</a></li>
+</ul>
+</div>
+      
+      <div id="content">
+          <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Malloc are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Memory Allocation and Management</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Performance Optimization</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Developing in a Restricted Environment</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+          <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="backstory" class="title-text">Backstory<a class="anchor title-text" href="#backstory">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Well, color me impressed! Your shell was so fancy that you actually received that pay raise! However, you <em>may</em> have gone too far with your shell. Your boss is now so impressed at your skills that they sent you to the <script type="math/tex">n</script>th Inter-Company Turbo Malloc Contest - even though you’re just a newhire! But hey, a business trip doesn’t sound that bad, right?</p>
+<p>Upon arriving at the competition venue, you realize that all your peers from CS 241 are in the contest! Apparently, all of them went too far with their shells as well, and ended up in the same scenario as you. Just as you were reminiscing about your time in CS 241, you received an email from your senpai in the company about the contest, and your face turns pale immediately.</p>
+<p>Turns out, the Inter-Company Turbo Malloc Contest is the official<img class="emoji" title=":tm:" alt=":tm:" src="https://github.githubassets.com/images/icons/emoji/unicode/2122.png" height="20" width="20"> way tech companies compete with each other these days - winning the competition guarantees fame and glory for the company, and the losing companies will suffer shame and embarassment. What’s more, any company that cannot beat the baseline will incur severe stock drops! Needless to say, losing the competition will ruin all your efforts in the past weeks to impress your boss, and if you fail to beat the baseline, you will probably lose your job, again (and this time, everyone will know your failures, since this contest is heavily publicized).</p>
+<p>The competition lasts for two weeks, and you get total freedom on your implementation. This time, you’ve decided not to procrastinate, since your entire livelihood hinges on how well you perform in this competition. Can you out-think every other contestant’s implementations and secure that epic victory royale?</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="overview" class="title-text">Overview<a class="anchor title-text" href="#overview">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>You should write your implementations of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/calloc" class="fancy-link">calloc</a></code>, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code>, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/realloc" class="fancy-link">realloc</a></code>, and <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/free" class="fancy-link">free</a></code> in <code class="highlighter-rouge">alloc.c</code>. <code class="highlighter-rouge">alloc.c</code> will be the only file we test.</p>
+<p>Don’t modify <code class="highlighter-rouge">mcontest.c</code>, <code class="highlighter-rouge">contest.h</code>, or <code class="highlighter-rouge">contest-alloc.so</code>. Those files create the environment that replaces the standard glibc malloc with your malloc. These files will be used for testing.</p>
+<p>Your <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code> must allocate heap memory using <code class="highlighter-rouge"><a href="https://linux.die.net/man/2/sbrk" class="fancy-link">sbrk</a></code>. You may not use files, pipes, system shared memory, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/mmap" class="fancy-link">mmap</a></code>, a chunk of pre-defined stack memory, other external memory libraries found on the Internet, or any of the various other external sources of memory that exist on modern operating systems.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="a-bad-example" class="title-text">A Bad Example<a class="anchor title-text" href="#a-bad-example">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Memory allocation seems like a mystery, but in actuality, we are making a wrapper around the system call <a href="http://linux.die.net/man/2/sbrk" class="fancy-link wiki-link"><code class="highlighter-rouge">sbrk</code></a>. Here’s a really simple implementation of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code>:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="o">*</span><span class="nf">malloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">sbrk</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>As you can see, when we request <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/size" class="fancy-link">size</a></code> bytes of memory, we call <code class="highlighter-rouge">sbrk(size)</code> to increase the heap by <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/size" class="fancy-link">size</a></code> bytes. Then, we return a pointer to this memory, and we’re done. Simple!</p>
+<p>Here is our implementation of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/free" class="fancy-link">free</a></code>:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">free</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This is a “correct” way to implement <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/free" class="fancy-link">free</a></code>. However, the obvious drawback with our implementation is that we can’t reuse memory after we are done with it. Also, we have not checked for errors when we call <code class="highlighter-rouge"><a href="https://linux.die.net/man/2/sbrk" class="fancy-link">sbrk</a></code>, and we have not implemented <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/realloc" class="fancy-link">realloc</a></code> or <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/calloc" class="fancy-link">calloc</a></code>.</p>
+<p>Despite all of this, this is still a “working” implementation of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code>. So, the job of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code> is not really to allocate memory, but to keep track of the memory we’ve allocated so that we can reuse it. You will use methods that you’ve learned in class and practiced in the Mini Memcheck lab to do this.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="testing-your-code" class="title-text">Testing Your Code<a class="anchor title-text" href="#testing-your-code">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>In order to run your solution on the testers, run <code class="highlighter-rouge">./mcontest</code> with the tester you want. You <strong>must</strong> do this, or your code will be run with the glibc implementation!</p>
+<p>Example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./mcontest testers_exe/tester-1
+Memory failed to allocate!
+[mcontest]: STATUS: FAILED=(256)
+[mcontest]: MAX: 0
+[mcontest]: AVG: 0.000000
+[mcontest]: TIME: 0.000000
+</code></pre></div></div>
+<p>We’ve also distributed a bash script <code class="highlighter-rouge">run_all_mcontest.sh</code> to run all testers. We design the script so that you can
+easily test your malloc implementation. Here is how you use the script:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run_all_mcontest.sh
+</code></pre></div></div>
+<p>It will automatically make clean and make again, and then run each test case in the <em>testers</em> folder. If you want to skip
+some test cases, you can do:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run_all_mcontest.sh -s 1 2 3
+</code></pre></div></div>
+<p>where 1, 2, and 3 are the tests you want to skip. You can skip as many as you like.</p>
+<p>Here is what some of our error codes mean:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>11: (SIGSEGV) Segmentation fault
+15: (SIGTERM) Timed out
+65, 66: Dynamic linking error
+67: Failed to collect memory info
+68: Exceeded memory limit
+91: Data allocated outside of heap
+92: Data allocated exceeds heap limit
+</code></pre></div></div>
+<h3 id="good-practices" class="title-text">Good Practices</h3>
+<p>Since you can implement your malloc in whatever way you want, you may end up with a huge chunk of messy code that’s hard to debug. Here are some suggestions for organizing and maintaining your code better:</p>
+<ul>
+  <li>Build simple functions before you add advanced features. In other words, make sure your program does what you want it to do before moving on to optimize it.</li>
+  <li>Separate the functionality of your program into smaller chunks of independent code. For example, if you find that you’re frequently splitting a block of memory into two blocks, you probably want to write a split function instead of copy-pasting the splitting code every time you need to split.</li>
+  <li>Keep your code readable. This can be naming your variables appropriately or commenting your code well. This will really help you understand what your code is doing when you look back at them three days later!</li>
+</ul>
+<p>As you come up with ideas it’s a good idea to try to understand what edges your
+algorithm might run into and try to make sure you handle them before even
+implementing your code. You may find this visualizer useful for this task:
+<a href="http://aneeshdurg.me/visual-malloc/" class="fancy-link wiki-link">http://aneeshdurg.me/visual-malloc/</a></p>
+<h3 id="debugging" class="title-text">Debugging</h3>
+<p><code class="highlighter-rouge">./mcontest</code> runs an optimized version of your code, so you won’t be able to debug with <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/gdb" class="fancy-link">gdb</a></code>. To solve this, we have provided another version called <code class="highlighter-rouge">./mreplace</code> which uses a version of your malloc compiled without optimization, so you can debug with <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/gdb" class="fancy-link">gdb</a></code>. Here’s an example, running tester 2 with gdb:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb --args ./mreplace testers_exe/tester-2
+</code></pre></div></div>
+<p>Since <code class="highlighter-rouge">./mreplace</code> calls <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fork" class="fancy-link">fork</a></code>, you need to change the <code class="highlighter-rouge">follow-fork-mode</code> in <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/gdb" class="fancy-link">gdb</a></code> to be able to set a breakpoint in your <code class="highlighter-rouge">alloc.c</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(gdb) set follow-fork-mode child
+(gdb) break alloc.c:322
+No source file named alloc.c.
+Make breakpoint pending on future shared library load? (y or [n]) y
+Breakpoint 1 (alloc.c:322) pending.
+(gdb) run
+</code></pre></div></div>
+<p><em>Note:</em> if you terminate your running program and run it again, i.e. if you do this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(gdb) run
+Thread 2.1 "tester-2" hit Breakpoint 1, malloc (size=1) at alloc.c:323
+323    return ptr;
+(gdb) kill
+Kill the program being debugged? (y or n) y
+[mcontest]: STATUS: FAILED. SIGNAL=(9)
+[mcontest]: MAX: 0
+[mcontest]: AVG: 0.000000
+[mcontest]: TIME: 0.012000
+(gdb) run
+Starting program: malloc/testers_exe/tester-2
+Memory was allocated, used, and freed!
+</code></pre></div></div>
+<p>it will no longer use your own implementation, and therefore will not stop at the breakpoints you set, and will use the glibc implementations of malloc/calloc/etc. This is because of the way <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/gdb" class="fancy-link">gdb</a></code> handles dynamically loaded libraries.</p>
+<h3 id="real-programs" class="title-text">Real Programs</h3>
+<p>Both <code class="highlighter-rouge">mcontest</code> and <code class="highlighter-rouge">mreplace</code> can be used to launch “real” programs (not just the testers). For example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ignore the warning about an invalid terminal, if you get it
+./mreplace /usr/bin/less alloc.c
+</code></pre></div></div>
+<p>or</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./mcontest /bin/ls
+</code></pre></div></div>
+<p>There are some programs that might not work correctly under your malloc, for a variety of reasons. You might be able to avoid this problem if you make all your
+global variables static. If you encounter a program for which this fix doesn’t work, post on Piazza!</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="grading" class="title-text">Grading<a class="anchor title-text" href="#grading">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Here is the grading breakdown:</p>
+<ul>
+  <li>Correctness (75%)
+    <ul>
+      <li>Part 1 (25%): tests 1-6 complete successfully.</li>
+      <li>Part 2 (50%): tests 1-12 complete successfully.</li>
+    </ul>
+  </li>
+  <li>Performance (25%): Points only awarded if all part 2 testers complete
+successfully - due with part2</li>
+</ul>
+<p>There are 12 testcases in total. For part 1, you will be graded using tests 1
+through 6. For part 2, you will be graded using tests 1 to 12 (tests 1 through 6
+get graded twice). Tester 13 is not graded.</p>
+<p>There are also performance points, which you are only eligible for if you pass
+all the testcases. Your malloc will be compared against the <code class="highlighter-rouge">glibc</code> version of
+malloc, and given a base performance score as a percentage (accounting for
+runtime, maximum memory usage, and average memory usage). The base score is
+calculated using the formula from the contest section below; higher percentages
+are better. Performance points are then awarded in buckets:</p>
+<ul>
+  <li>Better than or equal to 85% of glibc: Full 25% awarded.</li>
+  <li>75-85% (include 75%, exclude 85%): 20% awarded.</li>
+  <li>60-75%: 15% awarded.</li>
+  <li>40-60%: 10% awarded.</li>
+  <li>40% and worse: 0% awarded.</li>
+</ul>
+<p>So, let’s work out some scenarios:</p>
+<ul>
+  <li>Scenario 1: A student gets tests 1 through 6 working for part1 and misses 2
+tests on part2. Then they get all of the correctness points for part1, 10/12
+of the correctness points for part2 and none of the performance points. Thus
+this student will receive a <code class="highlighter-rouge">(6 / 6) * 25 + (10 / 12) * 50 + 0 = 66.67%</code>.</li>
+  <li>Scenario 2: A student gets none of the tests working for part1 and gets
+everything working for part2 and beats <code class="highlighter-rouge">glibc</code>. Then they get none of the
+correctness points for part1, 12/12 of the correctness points for part2, and
+the performance points. This student will receive a
+<code class="highlighter-rouge">(0 / 6) * 25 + (12 / 12) * 50 + 25 = 75.00%</code>.</li>
+  <li>Scenario 3: A student gets tests 1 through 6 working for part1, then they get
+all the tests except test 4 working for part2. Then they get all of the
+correctness points for part1, 11/12 of the correctness points for part2, but
+they will not receive any of the performance points. This student will
+receive a <code class="highlighter-rouge">(6 / 6) * 25 + (11 / 12) * 50 + 0 = 70.83%</code>.</li>
+  <li>
+    <p>Scenario 4: A student gets tests 1 through 6 working for part1, then they get
+all of the tests working for part2, but they can only get to <code class="highlighter-rouge">65%</code> of
+<code class="highlighter-rouge">glibc</code>. In this case, they get all of the correctness points for part 1, all
+of the correctness points for part 2, but only 15% performance points. So,
+they get <code class="highlighter-rouge">(6 / 6) * 25 + (12 / 12) * 50 + 15 = 90.00%</code></p>
+  </li>
+  <li>We modify the allocation numbers slightly when we actually grade.</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="contest" class="title-text">Contest<a class="anchor title-text" href="#contest">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><strong>View the malloc contest <a href="https://fa19-cs241-grd-01.cs.illinois.edu/malloc/" class="fancy-link wiki-link">here</a>!</strong></p>
+<p>The malloc contest pits your memory allocator implementation against your fellow students. There are a few things to know:</p>
+<ul>
+  <li>The test cases used for grading will be randomized with a different seed every day.</li>
+  <li>There may be additional, more advanced tests added which won’t count for anything but the contest.</li>
+  <li>The memory limit is 2.500GB.</li>
+  <li>To submit your program to the contest, you simply commit, push your code and run the distributed autograder. The contest page will be updated to reflect the results. You will have a number of runs per day, so that you can update your score as desired.</li>
+  <li>We will assign a score to each of the three categories (max heap, average heap, and total time) based on how well your program performs memory management relative to a standard solution.</li>
+  <li>You can pick a nickname in <code class="highlighter-rouge">nickname.txt</code>. You will show up as this name on the contest webpage.</li>
+  <li>On the webpage, each test will either be green, which signifies that you passed the test, or red, which signifies that you failed the test.</li>
+</ul>
+<h3 id="scores-and-ranking" class="title-text">Scores and ranking</h3>
+<p>Your score will be computed by the following formula:</p>
+<script type="math/tex; mode=display">100\% \times \frac{1}{3n} \sum_{i=1}^n \bigg(\log_2\Big(\frac{time_{\textit{reference}, i}}{time_{\textit{student}, i}} + 1\Big) + \log_2\Big(\frac{avg_{\textit{reference}, i}}{avg_{\textit{student}, i}} + 1\Big) + \log_2\Big(\frac{max_{\textit{reference}, i}}{max_{\textit{student}, i}} + 1\Big)\bigg)</script><p>Where:</p>
+<ul>
+  <li>
+<script type="math/tex">n</script> is the number of tests</li>
+  <li>
+<script type="math/tex">\textit{reference}</script> in the subscript means reference implementation, and <script type="math/tex">\textit{student}</script> means student’s implementation</li>
+  <li>
+<script type="math/tex">time_{\textit{reference}, i}</script> is the time reference implementation spends on test <script type="math/tex">i</script>
+</li>
+  <li>
+<script type="math/tex">time_{\textit{student}, i}</script> is the time student spends on test <script type="math/tex">i</script>
+</li>
+  <li>
+<script type="math/tex">avg_{\textit{reference}, i}</script> is the average memory used by reference implementation on test <script type="math/tex">i</script>
+</li>
+  <li>
+<script type="math/tex">avg_{\textit{student}, i}</script> is the average memory used by student implementation on test <script type="math/tex">i</script>
+</li>
+  <li>
+<script type="math/tex">max_{\textit{reference}, i}</script> is the max memory used by the reference implementation on test <script type="math/tex">i</script>
+</li>
+  <li>
+<script type="math/tex">max_{\textit{student}, i}</script> is the max memory used by the student implementation on test <script type="math/tex">i</script>
+</li>
+</ul>
+<p>Higher scores are better.</p>
+<p><strong>Note:</strong> We reserve the right to slightly modify constants inside the formula to ensure fair grading and prevent gaming the system. However, the basic idea will not be changing, and whatever we use will be the same for everyone.</p>
+<p><strong>Example 1.</strong></p>
+<p>If a student implementation <script type="math/tex">x</script> performs like the reference implementation, which means it spends the same time and memory as the reference, then <script type="math/tex">x</script>’s score will be:</p>
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{aligned}
+score_x
+&=
+100\% \times \frac{1}{3n} \sum_{i=1}^n \bigg(\log_2\Big(\frac{time_{\textit{reference}, i}}{time_{x, i}} + 1\Big) + \log_2\Big(\frac{avg_{\textit{reference}, i}}{avg_{x, i}} + 1\Big) + \log_2\Big(\frac{max_{\textit{reference}, i}}{max_{x, i}} + 1\Big)\bigg) \\
+&=
+100\% \times \frac{1}{3n} \sum_{i=1}^n \big(\log_2(2) + \log_2(2) + \log_2(2)\big) \\
+&= 100\%\times \frac{1}{3n} \sum_{i=1}^n 3\\
+&= 100\%
+\end{aligned} %]]></script><p><strong>Example 2.</strong></p>
+<p>If a student implementation <script type="math/tex">y</script> performs the same as the reference implementation on memory usage, but is twice as slow (meaning <script type="math/tex">time_{y, i} = 2 \times time_{\textit{reference}, i}</script>), then <script type="math/tex">y</script>’s score will be:</p>
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{aligned}
+score_y
+&=
+100\% \times \frac{1}{3n} \sum_{i=1}^n \bigg(\log_2\Big(\frac{time_{\textit{reference}, i}}{time_{y, i}} + 1\Big) + \log_2\Big(\frac{avg_{\textit{reference}, i}}{avg_{y, i}} + 1\Big) + \log_2\Big(\frac{max_{\textit{reference}, i}}{max_{y, i}} + 1\Big)\bigg) \\
+&=
+100\% \times \frac{1}{3n} \sum_{i=1}^n \big(\log_2(\tfrac{1}{2} + 1) + \log_2(2) + \log_2(2)\big) \\
+&= 100\%\times \frac{1}{3n} \sum_{i=1}^n 2.585\\
+&= 86.2\%
+\end{aligned} %]]></script><p><strong>Example 3.</strong></p>
+<p>If a student implementation <script type="math/tex">z</script> performs three times better than the reference implementation, which means <script type="math/tex">time_{z, i} = \frac{time_{\textit{reference}, i}}{3}</script>, <script type="math/tex">avg_{z, i} = \frac{avg_{\textit{reference}, i}}{3}</script>, and <script type="math/tex">max_{z, i} = \frac{max_{\textit{reference}, i}}{3}</script>, then <script type="math/tex">z</script>’s score will be:</p>
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{aligned}
+score_z
+&=
+100\% \times \frac{1}{3n} \sum_{i=1}^n \bigg(\log_2\Big(\frac{time_{\textit{reference}, i}}{time_{z, i}} + 1\Big) + \log_2\Big(\frac{avg_{\textit{reference}, i}}{avg_{z, i}} + 1\Big) + \log_2\Big(\frac{max_{\textit{reference}, i}}{max_{z, i}} + 1\Big)\bigg) \\
+&=
+100\% \times \frac{1}{3n} \sum_{i=1}^n \big(\log_2(4) + \log_2(4) + \log_2(4)\big) \\
+&= 100\%\times \frac{1}{3n} \sum_{i=1}^n 6 \\
+&= 200\%
+\end{aligned} %]]></script><p><strong>WARNING:</strong> As the deadline approaches, the contest page will refresh more slowly. There are 400 students, 12 test cases, and up to a minute or so. It will only retest a student’s code if it has been updated, but many more students will be updating their code causing longer waits. Start early, and don’t become reliant on the contest page by testing locally!</p>
+</div></div></div>
+</div></div>
+</div>
+          
+          <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_docs/malloc.md";
+  </script>
+  <!-- Mathjax takes a while to load so do a lazy load to so we can get accessibility -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" crossorigin="anonymous"></script>
+
+<!-- Bring in JQuery and Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<footer class="">
+
+<!-- Add another container at the bottom so there is some space there -->
+<div class="container-fluid">
+<div class="shadow"></div>
+
+</div>
+
+</footer>
+
+</div></body>
+
+<!-- Mirrored from cs241.cs.illinois.edu/assignments/malloc.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2019 18:32:32 GMT -->
+</html>
